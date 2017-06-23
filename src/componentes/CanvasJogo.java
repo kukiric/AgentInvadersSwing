@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 /**
- * Responsabilidades:
+ * Responsabilidade:
  * - Desenhar o estado atual do jogo
  * @author ricardo
  */

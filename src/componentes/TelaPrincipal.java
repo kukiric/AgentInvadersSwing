@@ -43,7 +43,7 @@ public class TelaPrincipal extends JFrame {
         // Fim eventos
     }
     
-    protected void onSair(boolean confirmar) {
+    private void onSair(boolean pedirConfirmacao) {
         int code = JOptionPane.showConfirmDialog(rootPane, "Deseja mesmo encerrar a simulação?", "Sair", JOptionPane.YES_NO_OPTION);
         if (code == JOptionPane.YES_OPTION) {
             setVisible(false);
