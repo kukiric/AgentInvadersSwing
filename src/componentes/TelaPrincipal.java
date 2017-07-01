@@ -1,6 +1,6 @@
 package componentes;
 
-import agentes.NaveJogador;
+import geral.JadeHelper;
 import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -20,6 +20,8 @@ import geral.Sprites;
  */
 public class TelaPrincipal extends JFrame {
 
+    JadeHelper jade;
+
     public TelaPrincipal() {
         // Pré-carrega todas as sprites
         Sprites.carregarTudo();
@@ -31,31 +33,48 @@ public class TelaPrincipal extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
-                onSair(true);
+                confirmarSair();
             }
         });
 
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent ke) {
-                switch (ke.getKeyCode()) {
-                    case KeyEvent.VK_ESCAPE:
-                        onSair(true);
-                        break;
-                }
+                teclaPressionada(ke.getKeyCode(), ke.getModifiers());
             }
             @Override
             public void keyReleased(KeyEvent ke) {
+                teclaSoltada(ke.getKeyCode(), ke.getModifiers());
             }
         });
-        // Fim eventos
+
+        // Inicializa o JADE
+        jade = new JadeHelper();
     }
 
-    private void onSair(boolean pedirConfirmacao) {
+    private void teclaPressionada(int codigo, int mod) {
+        switch (codigo) {
+            case KeyEvent.VK_ESCAPE:
+                confirmarSair();
+                break;
+            case KeyEvent.VK_R:
+                // Cria um novo RMA se ele não existe
+                if (jade.getAgenteLocal("rma") == null) {
+                    jade.criaAgente("rma", "jade.tools.rma.rma");
+                }
+        }
+    }
+
+    private void teclaSoltada(int codigo, int mod) {
+        switch (codigo) {
+        }
+    }
+
+    private void confirmarSair() {
         int code = JOptionPane.showConfirmDialog(rootPane, "Deseja mesmo encerrar a simulação?", "Sair", JOptionPane.YES_NO_OPTION);
         if (code == JOptionPane.YES_OPTION) {
             setVisible(false);
-            dispose();
+            System.exit(0);
         }
     }
 
@@ -67,29 +86,29 @@ public class TelaPrincipal extends JFrame {
         labelCanto = new javax.swing.JLabel();
         canvas = new componentes.CanvasJogo();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("AgentInvaders");
         setResizable(false);
         getContentPane().setLayout(new javax.swing.OverlayLayout(getContentPane()));
 
         painel.setOpaque(false);
 
-        labelCanto.setText("Inserir texto de ajuda/controles/como reiniciar a simulaçào etc.");
+        labelCanto.setText("<html>\n<b>R: </b>Abrir RMA\n<br>\n<b>Esc: </b>Sair\n</html>");
 
         javax.swing.GroupLayout painelLayout = new javax.swing.GroupLayout(painel);
         painel.setLayout(painelLayout);
         painelLayout.setHorizontalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelCanto)
+                .addContainerGap(543, Short.MAX_VALUE)
+                .addComponent(labelCanto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         painelLayout.setVerticalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
-                .addContainerGap(503, Short.MAX_VALUE)
-                .addComponent(labelCanto)
+                .addContainerGap(491, Short.MAX_VALUE)
+                .addComponent(labelCanto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 

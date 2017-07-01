@@ -2,7 +2,7 @@
 
 <Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
-    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="defaultCloseOperation" type="int" value="0"/>
     <Property name="title" type="java.lang.String" value="AgentInvaders"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
@@ -32,7 +32,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="543" max="32767" attributes="0"/>
                   <Component id="labelCanto" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -41,7 +41,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="503" max="32767" attributes="0"/>
+                  <EmptySpace pref="491" max="32767" attributes="0"/>
                   <Component id="labelCanto" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -51,7 +51,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="labelCanto">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Inserir texto de ajuda/controles/como reiniciar a simula&#xe7;&#xe0;o etc."/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;R: &lt;/b&gt;Abrir RMA&#xa;&lt;br&gt;&#xa;&lt;b&gt;Esc: &lt;/b&gt;Sair&#xa;&lt;/html&gt;"/>
           </Properties>
         </Component>
       </SubComponents>
