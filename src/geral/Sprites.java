@@ -1,4 +1,4 @@
-package recursos;
+package geral;
 
 import java.awt.Image;
 import java.io.File;
@@ -35,8 +35,8 @@ public class Sprites {
         indice.put("NaveJogador", arquivo("Assets/Sprites/playerShip3_blue.png"));
         indice.put("InimigoBasico", arquivo("Assets/Sprites/Ships/spaceShips_001.png"));
         indice.put("NaveCuradoura", arquivo("Assets/Sprites/ufoGreen.png"));
-        // Possível TODO: Usar projéteis vermelhos para os inimigos
-        indice.put("ProjetilBasico", arquivo("Assets/Sprites/Lasers/laserBlue07.png"));
+        indice.put("ProjetilBasico_Jogador", arquivo("Assets/Sprites/Lasers/laserBlue07.png"));
+        indice.put("ProjetilBasico_Inimigo", arquivo("Assets/Sprites/Lasers/laserRed07.png"));
     }
 
     public static void carregarTudo() {

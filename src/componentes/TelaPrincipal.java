@@ -1,5 +1,6 @@
 package componentes;
 
+import agentes.NaveJogador;
 import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -8,7 +9,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import recursos.Sprites;
+import geral.Sprites;
 
 /**
  * Responsabilidades:
@@ -20,15 +21,20 @@ import recursos.Sprites;
 public class TelaPrincipal extends JFrame {
 
     public TelaPrincipal() {
+        // Pré-carrega todas as sprites
         Sprites.carregarTudo();
+
+        // Inicializa a interface
         initComponents();
-        // Eventos
+
+        // Conecta os eventos
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
                 onSair(true);
             }
         });
+
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent ke) {
@@ -44,7 +50,7 @@ public class TelaPrincipal extends JFrame {
         });
         // Fim eventos
     }
-    
+
     private void onSair(boolean pedirConfirmacao) {
         int code = JOptionPane.showConfirmDialog(rootPane, "Deseja mesmo encerrar a simulação?", "Sair", JOptionPane.YES_NO_OPTION);
         if (code == JOptionPane.YES_OPTION) {

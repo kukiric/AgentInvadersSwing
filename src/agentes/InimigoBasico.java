@@ -1,14 +1,13 @@
 package agentes;
 
-import jade.core.Agent;
+public class InimigoBasico extends AgenteBase {
+    int vida;
 
-public class InimigoBasico extends Agent {
-    
-    int x, y, speed, health;
-    
+    public InimigoBasico() {
+        time = Time.Inimigo;
+    }
+
     @Override
     protected void setup() {
-        
     }
-    
 }
