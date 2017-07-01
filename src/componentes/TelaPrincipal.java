@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import recursos.Sprites;
 
 /**
  * Responsabilidades:
@@ -19,6 +20,7 @@ import javax.swing.UIManager;
 public class TelaPrincipal extends JFrame {
 
     public TelaPrincipal() {
+        Sprites.carregarTudo();
         initComponents();
         // Eventos
         addWindowListener(new WindowAdapter() {
@@ -61,7 +63,6 @@ public class TelaPrincipal extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AgentInvaders");
-        setPreferredSize(new java.awt.Dimension(800, 600));
         setResizable(false);
         getContentPane().setLayout(new javax.swing.OverlayLayout(getContentPane()));
 
@@ -88,6 +89,8 @@ public class TelaPrincipal extends JFrame {
 
         getContentPane().add(painel);
 
+        canvas.setPreferredSize(new java.awt.Dimension(800, 600));
+
         javax.swing.GroupLayout canvasLayout = new javax.swing.GroupLayout(canvas);
         canvas.setLayout(canvasLayout);
         canvasLayout.setHorizontalGroup(
@@ -113,7 +116,9 @@ public class TelaPrincipal extends JFrame {
         }
 
         EventQueue.invokeLater(() -> {
-            new TelaPrincipal().setVisible(true);
+            TelaPrincipal tela = new TelaPrincipal();
+            tela.setLocationRelativeTo(null);
+            tela.setVisible(true);
         });
     }
 
