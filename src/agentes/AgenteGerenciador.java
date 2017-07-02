@@ -1,5 +1,6 @@
 package agentes;
 
+import geral.JadeHelper;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.wrapper.StaleProxyException;
@@ -16,17 +17,10 @@ public class AgenteGerenciador extends Agent {
             @Override
             public void action() {
                 // Cria os agentes do jogo
-                try {
-                    for (int i = 0; i < 30; i++) {
-                        getContainerController().createNewAgent("Inimigo " + i, "agents.BasicEnemy", new Object[] {}).start();
-                    }
-                    getContainerController().createNewAgent("Jogador", "agents.PlayerShip", new Object[] {}).start();
-                    getContainerController().createNewAgent("Jogador", "agents.Healer", new Object[] {}).start();
-                }
-                catch (StaleProxyException e) {
-                    System.err.println("Erro na criação dos agentes: " + e.getMessage());
-                    System.exit(1);
-                }
+                JadeHelper jade = JadeHelper.instancia();
+                jade.criaAgentes("InimigoBasico", "agentes.InimigoBasico", 30);
+                jade.criaAgente("NaveJogador", "agentes.NaveJogador");
+                jade.criaAgente("NaveCuradoura", "agentes.NaveCuradoura");
             }
         });
     }

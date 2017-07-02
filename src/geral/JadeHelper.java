@@ -5,6 +5,7 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
+import java.util.stream.Stream;
 
 /**
  * Responsabilidade:
@@ -13,12 +14,20 @@ import jade.wrapper.StaleProxyException;
  */
 public class JadeHelper {
 
+    private static JadeHelper instancia;
     private AgentContainer ac;
 
-    public JadeHelper() {
+    private JadeHelper() {
         // Cria a instância do JADE
         ProfileImpl p = new ProfileImpl("localhost", 0, null);
         ac = jade.core.Runtime.instance().createMainContainer(p);
+    }
+
+    public static JadeHelper instancia() {
+        if (instancia == null) {
+            instancia = new JadeHelper();
+        }
+        return instancia;
     }
 
     public AgentContainer getContainer() {
@@ -36,6 +45,14 @@ public class JadeHelper {
             System.exit(1);
         }
         return agente;
+    }
+
+    public AgentController[] criaAgentes(String templateNome, String classe, int num) {
+        AgentController[] agentes = new AgentController[num];
+        for (int i = 0; i < num; i++) {
+            agentes[i] = criaAgente(templateNome + "_" + i, classe);
+        }
+        return agentes;
     }
 
     public AgentController getAgenteLocal(String nome) {

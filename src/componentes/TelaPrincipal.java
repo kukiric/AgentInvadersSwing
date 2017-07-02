@@ -48,8 +48,9 @@ public class TelaPrincipal extends JFrame {
             }
         });
 
-        // Inicializa o JADE
-        jade = new JadeHelper();
+        // Inicializa o JADE e o ambiente
+        jade = JadeHelper.instancia();
+        jade.criaAgente("_gerenciador", "agentes.AgenteGerenciador");
     }
 
     private void teclaPressionada(int codigo, int mod) {
