@@ -9,5 +9,7 @@ public class InimigoBasico extends AgenteBase {
 
     @Override
     protected void setup() {
+        rp.adicionarGetter("vida", () -> vida);
+        super.setup();
     }
 }

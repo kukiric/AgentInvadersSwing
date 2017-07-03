@@ -3,7 +3,6 @@ package agentes;
 import geral.JadeHelper;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
-import jade.wrapper.StaleProxyException;
 
 /**
  * Responsabilidade:
@@ -21,6 +20,8 @@ public class AgenteGerenciador extends Agent {
                 jade.criaAgentes("InimigoBasico", "agentes.InimigoBasico", 30);
                 jade.criaAgente("NaveJogador", "agentes.NaveJogador");
                 jade.criaAgente("NaveCuradoura", "agentes.NaveCuradoura");
+                System.out.println("AgenteGerenciador: Terminada a criação de agentes");
+                doDelete();
             }
         });
     }

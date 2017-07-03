@@ -8,5 +8,7 @@ public class NaveJogador extends AgenteBase {
     }
 
     protected void setup() {
+        rp.adicionarGetter("vida", () -> vida);
+        super.setup();
     }
 }

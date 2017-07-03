@@ -7,6 +7,11 @@ public class ProjetilBasico extends AgenteBase {
         time = timeAtirador;
     }
 
+    @Override
+    protected void setup() {
+        super.setup();
+    }
+
     // Varia o tipo da sprite de acordo com quem atirou
     @Override
     public String getNomeSprite() {

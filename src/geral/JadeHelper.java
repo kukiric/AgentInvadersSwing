@@ -1,11 +1,15 @@
 package geral;
 
+import jade.core.Agent;
 import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAException;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
-import java.util.stream.Stream;
 
 /**
  * Responsabilidade:
@@ -19,8 +23,10 @@ public class JadeHelper {
 
     private JadeHelper() {
         // Cria a instância do JADE
+        Runtime rt = Runtime.instance();
+        rt.setCloseVM(true);
         ProfileImpl p = new ProfileImpl("localhost", 0, null);
-        ac = jade.core.Runtime.instance().createMainContainer(p);
+        ac = rt.createMainContainer(p);
     }
 
     public static JadeHelper instancia() {
@@ -61,6 +67,18 @@ public class JadeHelper {
         }
         catch (ControllerException e) {
             return null;
+        }
+    }
+
+    public void registrarServico(Agent agente, String protocolo) {
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName(agente.getAID());
+        dfd.addProtocols(protocolo);
+        try {
+            DFService.register(agente, dfd);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 }

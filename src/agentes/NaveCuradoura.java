@@ -1,7 +1,6 @@
 package agentes;
 
 public class NaveCuradoura extends AgenteBase {
-    int x, y, speed;
 
     public NaveCuradoura() {
         time = Time.Neutro;
@@ -9,5 +8,6 @@ public class NaveCuradoura extends AgenteBase {
 
     @Override
     protected void setup() {
+        super.setup();
     }
 }

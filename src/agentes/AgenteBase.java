@@ -1,9 +1,8 @@
 package agentes;
 
+import comportamentos.RetornoPropriedade;
+import geral.JadeHelper;
 import jade.core.Agent;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAException;
 
 /**
  * Responsabilidade:
@@ -18,22 +17,20 @@ public abstract class AgenteBase extends Agent {
         Neutro
     }
 
+    protected RetornoPropriedade rp;
     public int x, y;
     public Time time;
 
+    AgenteBase() {
+        rp = new RetornoPropriedade();
+        rp.adicionarGetter("x", () -> x);
+        rp.adicionarGetter("y", () -> y);
+    }
+
     @Override
     protected void setup() {
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(getAID());
-        dfd.addLanguages("pt_BR");
-        dfd.addProtocols("ai_getPos");
-        try {
-            DFService.register(this, dfd);
-        }
-        catch (FIPAException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        JadeHelper.instancia().registrarServico(this, "ai_getProp");
+        addBehaviour(rp);
     }
 
     public String getNomeSprite() {
