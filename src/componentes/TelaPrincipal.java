@@ -51,6 +51,7 @@ public class TelaPrincipal extends JFrame {
         jade = JadeHelper.instancia();
         jade.criaAgente("Gerenciador", "agentes.AgenteGerenciador");
         jade.criaAgente("Interface", "agentes.AgenteInterface", new Object[] {canvas});
+        jade.criaAgente("rma", "jade.tools.rma.rma");
     }
 
     private void teclaPressionada(int codigo, int mod) {
@@ -94,28 +95,27 @@ public class TelaPrincipal extends JFrame {
 
         painel.setOpaque(false);
 
-        labelCanto.setText("<html>\n<b>R: </b>Abrir RMA\n<br>\n<b>Esc: </b>Sair\n</html>");
+        labelCanto.setForeground(new java.awt.Color(255, 255, 255));
+        labelCanto.setText("<html>\n<b>Espaço: </b>Pausar\n<br>\n<b>R: </b>Abrir RMA\n<br>\n<b>Esc: </b>Sair\n</html>");
 
         javax.swing.GroupLayout painelLayout = new javax.swing.GroupLayout(painel);
         painel.setLayout(painelLayout);
         painelLayout.setHorizontalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
-                .addContainerGap(728, Short.MAX_VALUE)
+                .addContainerGap(712, Short.MAX_VALUE)
                 .addComponent(labelCanto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         painelLayout.setVerticalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
-                .addContainerGap(561, Short.MAX_VALUE)
+                .addContainerGap(547, Short.MAX_VALUE)
                 .addComponent(labelCanto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         getContentPane().add(painel);
-
-        canvas.setPreferredSize(new java.awt.Dimension(800, 600));
 
         javax.swing.GroupLayout canvasLayout = new javax.swing.GroupLayout(canvas);
         canvas.setLayout(canvasLayout);

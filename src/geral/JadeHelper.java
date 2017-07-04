@@ -1,5 +1,6 @@
 package geral;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -10,6 +11,8 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Responsabilidade:
@@ -74,11 +77,37 @@ public class JadeHelper {
     }
 
     public void registrarServico(Agent agente, String protocolo) {
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(agente.getAID());
-        dfd.addProtocols(protocolo);
+        DFAgentDescription info = new DFAgentDescription();
+        info.setName(agente.getAID());
+        info.addProtocols(protocolo);
         try {
-            DFService.register(agente, dfd);
+            DFService.register(agente, info);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public List<AID> buscarServico(Agent agente, String protocolo) {
+        ArrayList<AID> agentes = new ArrayList<>();
+        DFAgentDescription filtro = new DFAgentDescription();
+        filtro.addProtocols(protocolo);
+        try {
+            DFAgentDescription[] provedores = DFService.search(agente, filtro);
+            agentes.ensureCapacity(provedores.length);
+            for (DFAgentDescription dfd : provedores) {
+                agentes.add(dfd.getName());
+            }
+        } catch (FIPAException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return agentes;
+    }
+
+    public void removerServico(Agent agente) {
+        try {
+            DFService.deregister(agente);
         } catch (FIPAException e) {
             e.printStackTrace();
             System.exit(1);

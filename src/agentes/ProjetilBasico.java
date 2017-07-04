@@ -1,15 +1,21 @@
 package agentes;
 
-public class ProjetilBasico extends AgenteBase {
-    int x, y, type, speed;
+import geral.Direcao;
 
-    public ProjetilBasico(Time timeAtirador) {
-        time = timeAtirador;
+public class ProjetilBasico extends AgenteBase {
+
+    public Direcao direcao;
+
+    public ProjetilBasico() {
+        tamanho = 2;
     }
 
     @Override
     protected void setup() {
         super.setup();
+        time = (Time)getArguments()[0];
+        direcao = (Direcao)getArguments()[1];
+        rp.adicionarGetter("direcao", () -> direcao);
     }
 
     // Varia o tipo da sprite de acordo com quem atirou

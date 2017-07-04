@@ -5,10 +5,11 @@ public class NaveJogador extends AgenteBase {
 
     public NaveJogador() {
         time = Time.Jogador;
+        tamanho = 25;
     }
 
     protected void setup() {
-        rp.adicionarGetter("vida", () -> vida);
         super.setup();
+        rp.adicionarGetter("vida", () -> vida);
     }
 }

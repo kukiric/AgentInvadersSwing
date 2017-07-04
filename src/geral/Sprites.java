@@ -1,8 +1,11 @@
 package geral;
 
+import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
@@ -15,7 +18,7 @@ public class Sprites {
 
     private static Sprites instancia;
 
-    private Map<String, Image> indice;
+    private Map<String, Image> imagens;
 
     private Image arquivo(String caminho) {
         File arquivo = new File(caminho);
@@ -28,14 +31,15 @@ public class Sprites {
             return null;
         }
     }
-    
+
     public Sprites() {
-        indice = new HashMap<>();
-        indice.put("NaveJogador", arquivo("Assets/Sprites/playerShip3_blue.png"));
-        indice.put("InimigoBasico", arquivo("Assets/Sprites/Ships/spaceShips_001.png"));
-        indice.put("NaveCuradoura", arquivo("Assets/Sprites/ufoGreen.png"));
-        indice.put("ProjetilBasico_Jogador", arquivo("Assets/Sprites/Lasers/laserBlue07.png"));
-        indice.put("ProjetilBasico_Inimigo", arquivo("Assets/Sprites/Lasers/laserRed07.png"));
+        imagens = new HashMap<>();
+        imagens.put("NaveJogador", arquivo("Assets/Sprites/playerShip3_blue.png"));
+        imagens.put("InimigoBasico", arquivo("Assets/Sprites/Ships/spaceShips_001.png"));
+        imagens.put("NaveCuradoura", arquivo("Assets/Sprites/ufoGreen.png"));
+        imagens.put("ProjetilBasico_Jogador", arquivo("Assets/Sprites/Lasers/laserBlue07.png"));
+        imagens.put("ProjetilBasico_Inimigo", arquivo("Assets/Sprites/Lasers/laserRed07.png"));
+        imagens.put("Fundo", arquivo("Assets/Sprites/Backgrounds/blue.png"));
     }
 
     public static void carregarTudo() {
@@ -45,6 +49,6 @@ public class Sprites {
     }
 
     public static Image get(String nome) {
-        return instancia.indice.get(nome);
+        return instancia.imagens.get(nome);
     }
 }
