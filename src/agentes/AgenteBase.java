@@ -7,7 +7,6 @@ import jade.core.Agent;
 /**
  * Responsabilidade:
  * - Representar as propriedades básicas de um agente físico qualquer no sistema
- * @author ricardo
  */
 public abstract class AgenteBase extends Agent {
 

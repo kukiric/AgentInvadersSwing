@@ -1,14 +1,14 @@
 package componentes;
 
-import java.awt.Color;
+import geral.Sprites;
 import java.awt.Graphics;
+import javax.swing.JPanel;
 
 /**
  * Responsabilidade:
  * - Desenhar o estado atual do jogo
- * @author ricardo
  */
-public class CanvasJogo extends javax.swing.JPanel {
+public class CanvasJogo extends JPanel {
 
     public CanvasJogo() {
         initComponents();
@@ -21,9 +21,8 @@ public class CanvasJogo extends javax.swing.JPanel {
     }
     
     @Override
-    public void paint(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, getWidth(), getHeight());
+    public void paintComponent(Graphics g) {
+        g.clearRect(0, 0, getWidth(), getHeight());
     }
     
     @SuppressWarnings("unchecked")

@@ -55,4 +55,15 @@ public class RetornoPropriedade extends CyclicBehaviour {
             block();
         }
     }
+
+    /**
+     * Cria uma mensagem pedindo o valor de alguma propriedade
+     */
+    public static ACLMessage criarMensagem(String prop) {
+        ACLMessage msg = new ACLMessage();
+        msg.setProtocol("ai_getProp");
+        msg.setPerformative(ACLMessage.REQUEST);
+        msg.setContent(prop);
+        return msg;
+    }
 }

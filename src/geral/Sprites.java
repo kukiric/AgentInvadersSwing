@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 /**
  * Responsabilidade:
  * - Carregar e gerenciar todas as sprites em escopo global
- * @author ricardo
  */
 public class Sprites {
 

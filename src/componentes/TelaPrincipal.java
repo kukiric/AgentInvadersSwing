@@ -16,7 +16,6 @@ import geral.Sprites;
  * - Criar a janela onde o jogo será desenhado
  * - Passar todos os eventos para o jogo
  * - Desenhar elementos adicionais sobre o canvas
- * @author ricardo
  */
 public class TelaPrincipal extends JFrame {
 
@@ -50,7 +49,8 @@ public class TelaPrincipal extends JFrame {
 
         // Inicializa o JADE e o ambiente
         jade = JadeHelper.instancia();
-        jade.criaAgente("AgenteGerenciador", "agentes.AgenteGerenciador");
+        jade.criaAgente("Gerenciador", "agentes.AgenteGerenciador");
+        jade.criaAgente("Interface", "agentes.AgenteInterface", new Object[] {canvas});
     }
 
     private void teclaPressionada(int codigo, int mod) {
@@ -101,14 +101,14 @@ public class TelaPrincipal extends JFrame {
         painelLayout.setHorizontalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
-                .addContainerGap(543, Short.MAX_VALUE)
+                .addContainerGap(728, Short.MAX_VALUE)
                 .addComponent(labelCanto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         painelLayout.setVerticalGroup(
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
-                .addContainerGap(491, Short.MAX_VALUE)
+                .addContainerGap(561, Short.MAX_VALUE)
                 .addComponent(labelCanto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );

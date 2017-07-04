@@ -7,7 +7,6 @@ import jade.core.behaviours.OneShotBehaviour;
 /**
  * Responsabilidade:
  * - Criar e gerenciar todos os agentes do sistema
- * @author ricardo
  */
 public class AgenteGerenciador extends Agent {
     @Override

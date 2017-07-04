@@ -14,7 +14,6 @@ import jade.wrapper.StaleProxyException;
 /**
  * Responsabilidade:
  * - Encapsular os métodos da biblioteca JADE e tratar as excessões diretamente de forma que faça sentido no escopo da aplicação
- * @author Ricardo Maes
  */
 public class JadeHelper {
 
@@ -40,10 +39,10 @@ public class JadeHelper {
         return ac;
     }
 
-    public AgentController criaAgente(String nome, String classe) {
+    public AgentController criaAgente(String nome, String classe, Object[] args) {
         AgentController agente = null;
         try {
-            agente = ac.createNewAgent(nome, classe, new Object[] {});
+            agente = ac.createNewAgent(nome, classe, args);
             agente.start();
         }
         catch (StaleProxyException e) {
@@ -51,6 +50,10 @@ public class JadeHelper {
             System.exit(1);
         }
         return agente;
+    }
+
+    public AgentController criaAgente(String nome, String classe) {
+        return criaAgente(nome, classe, new Object[] {});
     }
 
     public AgentController[] criaAgentes(String templateNome, String classe, int num) {
