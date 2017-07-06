@@ -1,21 +1,25 @@
 package agentes;
 
-public class InimigoBasico extends AgenteBase {
+import java.util.Random;
+
+public class InimigoBasico extends AgenteNave {
 
     private int xBase;
     private int yBase;
-    private double tempo;
+    private double tempoMovimentacao;
+    private Random rngTiro;
 
     public int vida;
 
     public InimigoBasico() {
-        time = Time.Inimigo;
+        super(100, 1, 1);
+        this.time = Time.Inimigo;
+        this.rngTiro = new Random();
     }
 
     @Override
     protected void setup() {
         super.setup();
-        rp.adicionarGetter("vida", () -> vida);
         // Escolhe a posição base desejada de acordo com o seu id
         int id = (int)getArguments()[0];
         x = xBase = (id % 5) * 100 + 200;
@@ -23,8 +27,21 @@ public class InimigoBasico extends AgenteBase {
     }
 
     @Override
+    protected boolean podeAtirar() {
+        // Baixa chance (0.1%)
+        return rngTiro.nextDouble() < 0.0025;
+    }
+
+    @Override
+    protected double anguloTiro() {
+        // Para baixo (-180º)
+        return Math.PI;
+    }
+
+    @Override
     public void update(double delta) {
-        tempo += delta;
-        x = xBase + Math.sin(tempo) * 100;
+        super.update(delta);
+        tempoMovimentacao += delta;
+        x = xBase + Math.sin(tempoMovimentacao) * 100;
     }
 }

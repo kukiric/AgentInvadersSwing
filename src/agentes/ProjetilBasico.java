@@ -9,8 +9,10 @@ public class ProjetilBasico extends AgenteBase {
     @Override
     protected void setup() {
         super.setup();
-        time = (Time)getArguments()[0];
-        angulo = (double)getArguments()[1];
+        this.time = (Time)getArguments()[0];
+        this.angulo = (double)getArguments()[1];
+        this.x = (double)getArguments()[2];
+        this.y = (double)getArguments()[3];
     }
 
     // Varia o tipo da sprite de acordo com quem atirou
@@ -20,6 +22,13 @@ public class ProjetilBasico extends AgenteBase {
     }
 
     @Override
-    public void update(double delta) {
+    public void update(double deltaTempo) {
+        // Move o projétil na direção que ele aponta
+        x += Math.sin(angulo) * deltaTempo * 200;
+        y -= Math.cos(angulo) * deltaTempo * 200;
+        // Remove o projétil se ele se encontrar fora da tela
+        if (x < -50 || x > 850 || y < -50 || y > 650) {
+            doDelete();
+        }
     }
 }

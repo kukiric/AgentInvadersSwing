@@ -18,7 +18,7 @@ public class AgenteGerenciador extends Agent {
                 JadeHelper jade = JadeHelper.instancia();
                 jade.criaAgentes("inimigo", "agentes.InimigoBasico", 15, (i) -> new Integer[] {i});
                 jade.criaAgente("jogador", "agentes.NaveJogador");
-                //jade.criaAgente("curadora", "agentes.NaveCuradora");
+                jade.criaAgente("curadora", "agentes.NaveCuradora");
                 System.out.println("AgenteGerenciador: Terminada a criação de agentes");
             }
         });

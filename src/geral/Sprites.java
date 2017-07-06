@@ -33,7 +33,7 @@ public class Sprites {
         imagens = new HashMap<>();
         imagens.put("NaveJogador", arquivo("Assets/Sprites/playerShip3_blue.png"));
         imagens.put("InimigoBasico", arquivo("Assets/Sprites/Ships/spaceShips_001.png"));
-        imagens.put("NaveCuradoura", arquivo("Assets/Sprites/ufoGreen.png"));
+        imagens.put("NaveCuradora", arquivo("Assets/Sprites/ufoGreen.png"));
         imagens.put("ProjetilBasico_Jogador", arquivo("Assets/Sprites/Lasers/laserBlue07.png"));
         imagens.put("ProjetilBasico_Inimigo", arquivo("Assets/Sprites/Lasers/laserRed07.png"));
         imagens.put("Fundo", arquivo("Assets/Sprites/Backgrounds/blue.png"));
