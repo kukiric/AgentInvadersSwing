@@ -9,5 +9,6 @@ public class NaveCuradora extends AgenteBase {
 
     @Override
     public void update(double delta) {
+        super.update(delta);
     }
 }

@@ -1,5 +1,6 @@
 package agentes;
 
+import geral.Time;
 import java.util.Random;
 
 public class InimigoBasico extends AgenteNave {
@@ -28,8 +29,8 @@ public class InimigoBasico extends AgenteNave {
 
     @Override
     protected boolean podeAtirar() {
-        // Baixa chance (0.1%)
-        return rngTiro.nextDouble() < 0.0025;
+        // Baixa chance de atirar a cada tick
+        return rngTiro.nextDouble() < 1.0/500;
     }
 
     @Override
@@ -42,6 +43,6 @@ public class InimigoBasico extends AgenteNave {
     public void update(double delta) {
         super.update(delta);
         tempoMovimentacao += delta;
-        x = xBase + Math.sin(tempoMovimentacao) * 100;
+        x = xBase + Math.sin(tempoMovimentacao) * 125;
     }
 }

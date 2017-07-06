@@ -6,7 +6,9 @@ import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
@@ -109,6 +111,14 @@ public class JadeHelper {
             System.exit(1);
         }
         return agentes;
+    }
+
+    public ACLMessage criaMensagemInscricao(Agent agente, String protocolo) {
+        DFAgentDescription filtro = new DFAgentDescription();
+        SearchConstraints sc = new SearchConstraints();
+        filtro.addProtocols(protocolo);
+        sc.setMaxResults(new Long(100));
+        return DFService.createSubscriptionMessage(agente, agente.getDefaultDF(), filtro, sc);
     }
 
     public void removerServico(Agent agente) {

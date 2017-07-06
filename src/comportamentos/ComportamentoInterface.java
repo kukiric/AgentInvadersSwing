@@ -7,87 +7,99 @@ import geral.PausaGlobal;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.TickerBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import protocolos.GetProp;
 
 /**
  * Coleta a posição de todos os outros agentes para desenhar na tela
  */
-public class ComportamentoInterface extends ParallelBehaviour {
+public final class ComportamentoInterface extends ParallelBehaviour {
+
+    private static MessageTemplate filtroProp = GetProp.getTemplateFiltro(ACLMessage.INFORM);
+    private static MessageTemplate filtroAss = GetProp.getTemplateFiltro(ACLMessage.AGREE);
+    private static MessageTemplate filtroSub = new MessageTemplate((msg) -> "fipa-subscribe".equals(msg.getProtocol()));
 
     private Map<AID, Ator> atores;
-    private Map<AID, Long> sequencia;
     private CanvasJogo canvas;
-    private boolean pausaLocal;
     
     public ComportamentoInterface(Agent agente, int intervalo, CanvasJogo canvas) {
         super(agente, ParallelBehaviour.WHEN_ALL);
         this.atores = new HashMap<>();
-        this.sequencia = new HashMap<>();
         this.canvas = canvas;
-        addSubBehaviour(new ComportamentoAtualizador(agente, intervalo));
-        addSubBehaviour(new ComportamentoRecebedor(agente));
-    }
-
-    // Pede novas informações aos atores e atualiza o canvas
-    class ComportamentoAtualizador extends TickerBehaviour {
-
-        public ComportamentoAtualizador(Agent agente, int intervalo) {
-            super(agente, intervalo);
-            setFixedPeriod(pausaLocal);
-        }
-
-        @Override
-        protected void onTick() {
-            // Respeita a pausa global, mas atualiza pelo menos uma vez durante a pausa
-            if (!PausaGlobal.pause || PausaGlobal.pause && !pausaLocal) {
-                pausaLocal = PausaGlobal.pause;
-                Agent agente = getAgent();
-                // Busca todos os agentes no diretório facilitador
-                List<AID> agentes = JadeHelper.instancia().buscarServico(agente, GetProp.nome());
-                // Compõe a mensagem e envia ela
-                ACLMessage msg = GetProp.criarMensagem(agente.getAID(), agentes, "definicaoAtor");
+        // Se inscreve no diretório facilitador para todos os agentes que expõem propriedades
+        addSubBehaviour(new OneShotBehaviour(agente) {
+            @Override
+            public void action() {
+                ACLMessage msg = JadeHelper.instancia().criaMensagemInscricao(agente, GetProp.nome());
                 agente.send(msg);
             }
-            // Atualiza o canvas mesmo quando completamente pausado
-            canvas.atualizar(new ArrayList<>(atores.values()));
-        }
-    }
-
-    // Recebe informações dos atores e atualiza a tabela de informações
-    class ComportamentoRecebedor extends CyclicBehaviour {
-
-        public ComportamentoRecebedor(Agent agente) {
-            super(agente);
-        }
-
-        @Override
-        public void action() {
-            // Recebe uma mensagem de cada vez
-            MessageTemplate filtro = GetProp.getTemplateFiltro(ACLMessage.INFORM);
-            ACLMessage msg = getAgent().receive(filtro);
-            if (msg != null) {
-                // Decodifica a mensagem
-                try {
-                    Ator ator = (Ator)msg.getContentObject();
-                    atores.put(msg.getSender(), ator);
+        });
+        // Recebe notificações do DF e pede inscrição aos agentes
+        addSubBehaviour(new CyclicBehaviour(agente) {
+            @Override
+            public void action() {
+                // Recebe uma mensagem de cada vez
+                ACLMessage msg = myAgent.receive(filtroSub);
+                if (msg != null) {
+                    // Decodifica a mensagem
+                    try {
+                        DFAgentDescription[] notificacoes = DFService.decodeNotification(msg.getContent());
+                        // Pede para receber notificações diretas dos agentes
+                        List<AID> agentes = Stream.of(notificacoes).map(n -> n.getName()).collect(Collectors.toList());
+                        ACLMessage msgSub = GetProp.criarMensagemPedido(myAgent.getAID(), agentes, "");
+                        msgSub.setPerformative(ACLMessage.SUBSCRIBE);
+                        msgSub.setContent("true");
+                        myAgent.send(msgSub);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
                 }
-                catch(Exception e) {
-                    e.printStackTrace();
-                    System.exit(1);
+                // Espera até a próxima mensagem
+                else {
+                    block();
                 }
             }
-            // Espera até a próxima mensagem
-            else {
+        });
+        // Consome as mensagens de concordância de assinatura
+        addSubBehaviour(new CyclicBehaviour(agente) {
+            @Override
+            public void action() {
+                ACLMessage msg = myAgent.receive(filtroAss);
                 block();
             }
-        }
+        });
+        // Trata o recebimento de atualizações dos agentes
+        addSubBehaviour(new ComportamentoGetPropClient(agente, msg -> {
+            // Ator morreu, remove ele
+            if (msg.prop.startsWith("morto") && (Boolean)msg.valor == true) {
+                atores.remove(msg.agente);
+            }
+            // Nova posição, atualiza a tabela
+            else if (msg.prop.startsWith("definicaoAtor")) {
+                atores.put(msg.agente, (Ator)msg.valor);
+            }
+        }));
+        // Atualiza a interface com os dados periodicamente
+        addSubBehaviour(new TickerBehaviour(agente, intervalo) {
+            @Override
+            protected void onTick() {
+                canvas.atualizar(new ArrayList<>(atores.values()));
+            }
+        });
     }
 }

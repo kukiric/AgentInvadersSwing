@@ -1,5 +1,7 @@
 package agentes;
 
+import geral.Time;
+
 public class NaveJogador extends AgenteNave {
 
     public int vida;

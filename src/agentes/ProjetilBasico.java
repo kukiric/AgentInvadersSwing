@@ -1,5 +1,7 @@
 package agentes;
 
+import geral.Time;
+
 public class ProjetilBasico extends AgenteBase {
 
     public ProjetilBasico() {
@@ -22,10 +24,12 @@ public class ProjetilBasico extends AgenteBase {
     }
 
     @Override
-    public void update(double deltaTempo) {
+    public void update(double delta) {
         // Move o projétil na direção que ele aponta
-        x += Math.sin(angulo) * deltaTempo * 200;
-        y -= Math.cos(angulo) * deltaTempo * 200;
+        x += Math.sin(angulo) * delta * 200;
+        y -= Math.cos(angulo) * delta * 200;
+        // Atualiza com a nova posição
+        super.update(delta);
         // Remove o projétil se ele se encontrar fora da tela
         if (x < -50 || x > 850 || y < -50 || y > 650) {
             doDelete();

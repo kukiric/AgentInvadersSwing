@@ -48,5 +48,6 @@ public abstract class AgenteNave extends AgenteBase {
             JadeHelper.instancia().criaAgente(nomeProjetil, "agentes.ProjetilBasico", opcoesProjetil);
             tempoTiro = 0;
         }
+        super.update(delta);
     }
 }

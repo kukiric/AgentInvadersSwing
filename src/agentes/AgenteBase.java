@@ -1,9 +1,10 @@
 package agentes;
 
-import comportamentos.ComportamentoGetProp;
+import comportamentos.ComportamentoGetPropServer;
 import geral.Ator;
 import geral.JadeHelper;
 import geral.PausaGlobal;
+import geral.Time;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import protocolos.GetProp;
@@ -13,13 +14,7 @@ import protocolos.GetProp;
  */
 public abstract class AgenteBase extends Agent {
 
-    public enum Time {
-        Jogador,
-        Inimigo,
-        Neutro
-    }
-
-    protected ComportamentoGetProp rp;
+    protected ComportamentoGetPropServer rp;
     public double x, y;
     public double tamanho;
     public double angulo;
@@ -27,15 +22,9 @@ public abstract class AgenteBase extends Agent {
 
     AgenteBase() {
         time = Time.Neutro;
-        rp = new ComportamentoGetProp(this);
-        // Configura as propriedades base do ator
-        rp.adicionarGetter("x", () -> x);
-        rp.adicionarGetter("y", () -> y);
-        rp.adicionarGetter("tamanho", () -> tamanho);
-        rp.adicionarGetter("angulo", () -> angulo);
-        rp.adicionarGetter("time", () -> time);
+        rp = new ComportamentoGetPropServer(this);
         rp.adicionarGetter("definicaoAtor", () -> getDefinicaoAtor());
-        // Conmfigura a função update
+        // Configura a função update
         addBehaviour(new TickerBehaviour(this, 16) {
             { setFixedPeriod(true); }
             @Override
@@ -57,15 +46,18 @@ public abstract class AgenteBase extends Agent {
     @Override
     protected void takeDown() {
         JadeHelper.instancia().removerServico(this);
+        rp.notificarProp("morto", new Boolean(true));
     }
 
-    public abstract void update(double delta);
+    public void update(double delta) {
+        rp.notificarProp("definicaoAtor", getDefinicaoAtor());
+    }
 
     public String getNomeSprite() {
         return getClass().getSimpleName();
     }
 
     public Ator getDefinicaoAtor() {
-        return new Ator(getNomeSprite(), x, y, angulo, 0.5);
+        return new Ator(getNomeSprite(), time, x, y, angulo, 0.5);
     }
 }
