@@ -71,7 +71,6 @@ public class TelaPrincipal extends JFrame {
                 }
                 else {
                     PausaGlobal.pause = true;
-                    canvas.repaint();
                     System.out.println("Simulação pausada");
                 }
                 break;

@@ -3,7 +3,6 @@ package protocolos;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,6 +14,7 @@ public class GetProp {
      */
     public static ACLMessage criarMensagem(AID remetente, List<AID> destinatarios, String prop) {
         ACLMessage msg = new ACLMessage();
+        msg.setLanguage("Java");
         msg.setProtocol("ai_getProp");
         msg.setPerformative(ACLMessage.REQUEST);
         msg.setContent(prop);

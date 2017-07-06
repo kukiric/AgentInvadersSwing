@@ -9,10 +9,10 @@ public class Ator implements Serializable {
     public String nomeSprite;
     public double angulo;
     public double escala;
-    public int x;
-    public int y;
+    public double x;
+    public double y;
 
-    public Ator(String nomeSprite, int x, int y, double angulo, double escala) {
+    public Ator(String nomeSprite, double x, double y, double angulo, double escala) {
         this.nomeSprite = nomeSprite;
         this.angulo = angulo;
         this.escala = escala;

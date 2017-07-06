@@ -20,10 +20,10 @@ public abstract class AgenteBase extends Agent {
     }
 
     protected ComportamentoGetProp rp;
-    public int x, y;
-    public Time time;
+    public double x, y;
     public double tamanho;
     public double angulo;
+    public Time time;
 
     AgenteBase() {
         time = Time.Neutro;
@@ -31,17 +31,18 @@ public abstract class AgenteBase extends Agent {
         // Configura as propriedades base do ator
         rp.adicionarGetter("x", () -> x);
         rp.adicionarGetter("y", () -> y);
-        rp.adicionarGetter("time", () -> time);
         rp.adicionarGetter("tamanho", () -> tamanho);
         rp.adicionarGetter("angulo", () -> angulo);
+        rp.adicionarGetter("time", () -> time);
         rp.adicionarGetter("definicaoAtor", () -> getDefinicaoAtor());
         // Conmfigura a função update
-        addBehaviour(new TickerBehaviour(this, 30) {
+        addBehaviour(new TickerBehaviour(this, 16) {
+            { setFixedPeriod(true); }
             @Override
             protected void onTick() {
                 // Respeita a pausa global
                 if (!PausaGlobal.pause) {
-                    update();
+                    update(getPeriod() / 1000.0);
                 }
             }
         });
@@ -58,7 +59,7 @@ public abstract class AgenteBase extends Agent {
         JadeHelper.instancia().removerServico(this);
     }
 
-    public abstract void update();
+    public abstract void update(double delta);
 
     public String getNomeSprite() {
         return getClass().getSimpleName();

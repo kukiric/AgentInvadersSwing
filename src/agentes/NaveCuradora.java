@@ -1,6 +1,6 @@
 package agentes;
 
-public class NaveCuradoura extends AgenteBase {
+public class NaveCuradora extends AgenteBase {
 
     @Override
     protected void setup() {
@@ -8,6 +8,6 @@ public class NaveCuradoura extends AgenteBase {
     }
 
     @Override
-    public void update() {
+    public void update(double delta) {
     }
 }

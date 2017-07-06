@@ -1,7 +1,8 @@
 package agentes;
 
 public class NaveJogador extends AgenteBase {
-    int vida;
+
+    public int vida;
 
     public NaveJogador() {
         time = Time.Jogador;
@@ -14,6 +15,6 @@ public class NaveJogador extends AgenteBase {
     }
 
     @Override
-    public void update() {
+    public void update(double delta) {
     }
 }

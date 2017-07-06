@@ -74,11 +74,13 @@ public class CanvasJogo extends JPanel {
             g.drawImage(img, -largura / 2, -altura / 2, this);
         }
 
-        // Desenha PAUSE no meio da tela
+        // Desenha PAUSA no meio da tela
         if (PausaGlobal.pause) {
+            g.setTransform(new AffineTransform());
+            g.setColor(new Color(0, 0, 0, 0.33f));
+            g.fillRect(0, 0, getWidth(), getHeight());
             g.setFont(fontePausa);
             g.setColor(Color.white);
-            g.setTransform(new AffineTransform());
             FontMetrics fm = g.getFontMetrics();
             g.drawString("PAUSA", getWidth() / 2 - fm.stringWidth("PAUSA") / 2, getHeight() / 2);
         }

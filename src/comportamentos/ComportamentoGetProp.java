@@ -38,6 +38,7 @@ public class ComportamentoGetProp extends CyclicBehaviour {
             String nomeProp = msg.getContent();
             Getter getter = getters.get(nomeProp);
             ACLMessage resp = msg.createReply();
+            resp.setInReplyTo(msg.getContent());
             // Responde a mensagem como válida se a propriedade existir
             if (getter != null) {
                 Serializable prop = getter.get();

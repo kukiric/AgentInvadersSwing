@@ -1,10 +1,6 @@
 package agentes;
 
-import geral.Direcao;
-
 public class ProjetilBasico extends AgenteBase {
-
-    public Direcao direcao;
 
     public ProjetilBasico() {
         tamanho = 2;
@@ -14,8 +10,7 @@ public class ProjetilBasico extends AgenteBase {
     protected void setup() {
         super.setup();
         time = (Time)getArguments()[0];
-        direcao = (Direcao)getArguments()[1];
-        rp.adicionarGetter("direcao", () -> direcao);
+        angulo = (double)getArguments()[1];
     }
 
     // Varia o tipo da sprite de acordo com quem atirou
@@ -25,6 +20,6 @@ public class ProjetilBasico extends AgenteBase {
     }
 
     @Override
-    public void update() {
+    public void update(double delta) {
     }
 }
