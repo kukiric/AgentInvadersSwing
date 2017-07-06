@@ -10,8 +10,6 @@ public class InimigoBasico extends AgenteNave {
     private double tempoMovimentacao;
     private Random rngTiro;
 
-    public int vida;
-
     public InimigoBasico() {
         super(100, 1, 1);
         this.time = Time.Inimigo;

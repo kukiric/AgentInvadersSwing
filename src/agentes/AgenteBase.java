@@ -58,6 +58,6 @@ public abstract class AgenteBase extends Agent {
     }
 
     public Ator getDefinicaoAtor() {
-        return new Ator(getNomeSprite(), time, x, y, angulo, 0.5);
+        return new Ator(getNomeSprite(), time, 1.0, x, y, angulo, 0.5);
     }
 }

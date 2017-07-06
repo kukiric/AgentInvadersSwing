@@ -36,6 +36,10 @@ public class Sprites {
         imagens.put("NaveCuradora", arquivo("Assets/Sprites/ufoGreen.png"));
         imagens.put("ProjetilBasico_Jogador", arquivo("Assets/Sprites/Lasers/laserBlue07.png"));
         imagens.put("ProjetilBasico_Inimigo", arquivo("Assets/Sprites/Lasers/laserRed07.png"));
+        imagens.put("BarraFundo", arquivo("Assets/UI/grey_button02.png"));
+        imagens.put("BarraCor_Neutro", arquivo("Assets/UI/green_button01.png"));
+        imagens.put("BarraCor_Jogador", arquivo("Assets/UI/blue_button01.png"));
+        imagens.put("BarraCor_Inimigo", arquivo("Assets/UI/red_button12.png"));
         imagens.put("Fundo", arquivo("Assets/Sprites/Backgrounds/blue.png"));
     }
 
@@ -46,6 +50,10 @@ public class Sprites {
     }
 
     public static Image get(String nome) {
-        return instancia.imagens.get(nome);
+        Image img = instancia.imagens.get(nome);
+        if (img == null) {
+            System.err.println("Sprite não encontrada: " + nome);
+        }
+        return img;
     }
 }

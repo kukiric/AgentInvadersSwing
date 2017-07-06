@@ -3,6 +3,7 @@ package componentes;
 import geral.Ator;
 import geral.PausaGlobal;
 import geral.Sprites;
+import geral.Time;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -72,6 +73,19 @@ public class CanvasJogo extends JPanel {
             at.scale(ator.escala, ator.escala);
             g.setTransform(at);
             g.drawImage(img, -largura / 2, -altura / 2, this);
+            // Desenha a vida do ator se ela estiver reduzida
+            if (ator.vida < 1.0) {
+                Image imgFundo = Sprites.get("BarraFundo");
+                Image imgBarra = Sprites.get("BarraCor_" + ator.time.name());
+                largura = imgBarra.getWidth(this);
+                altura = imgBarra.getHeight(this);
+                // Barra de vida maior e em baixo para o jogador
+                at.scale(ator.time == Time.Jogador ? 1.0 : 0.5, 0.5);
+                int offset = ator.time == Time.Jogador ? 100 : -150;
+                g.setTransform(at);
+                g.drawImage(imgFundo, -largura / 2, offset, largura, altura, this);
+                g.drawImage(imgBarra, -largura / 2, offset, (int)(largura * ator.vida), altura, this);
+            }
         }
 
         // Desenha PAUSA no meio da tela
