@@ -46,6 +46,7 @@ public class CanvasJogo extends JPanel {
     public void paintComponent(Graphics graphics) {
         Graphics2D g = (Graphics2D)graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.clearRect(0, 0, getWidth(), getHeight());
 
         // Desenha o fundo
@@ -82,7 +83,7 @@ public class CanvasJogo extends JPanel {
             g.drawString("PAUSA", getWidth() / 2 - fm.stringWidth("PAUSA") / 2, getHeight() / 2);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

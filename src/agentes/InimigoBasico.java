@@ -10,6 +10,11 @@ public class InimigoBasico extends AgenteBase {
     public InimigoBasico() {
         time = Time.Inimigo;
     }
+    
+    Random rand = new Random();
+    double velX = rand.nextDouble() * 5;
+    double velY = rand.nextDouble() * 5;
+    double velA = rand.nextDouble() * 0.2;
 
     @Override
     protected void setup() {
@@ -19,20 +24,12 @@ public class InimigoBasico extends AgenteBase {
         // Escolhe a posição desejada de acordo com seu id
         //x = 40;
         //y = 40;
-        // Teste de renderização
-        Random rand = new Random();
-        double velX = rand.nextDouble() * 5;
-        double velY = rand.nextDouble() * 5;
-        double velA = rand.nextDouble() * 0.2;
-        addBehaviour(new TickerBehaviour(this, 30) {
-            @Override
-            protected void onTick() {
-                if (!PausaGlobal.pause) {
-                    x += velX;
-                    y += velY;
-                    angulo += velA;
-                }
-            }
-        });
+    }
+
+    @Override
+    public void update() {
+        x += velX;
+        y += velY;
+        angulo += velA;
     }
 }

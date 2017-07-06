@@ -25,19 +25,19 @@ public class ComportamentoInterface extends ParallelBehaviour {
     private Map<AID, Ator> atores;
     private CanvasJogo canvas;
     
-    public ComportamentoInterface(Agent agente, CanvasJogo canvas) {
+    public ComportamentoInterface(Agent agente, int intervalo, CanvasJogo canvas) {
         super(agente, ParallelBehaviour.WHEN_ALL);
         this.atores = new HashMap<>();
         this.canvas = canvas;
-        addSubBehaviour(new ComportamentoAtualizador(agente));
+        addSubBehaviour(new ComportamentoAtualizador(agente, intervalo));
         addSubBehaviour(new ComportamentoRecebedor(agente));
     }
 
     // Pede novas informações aos atores e atualiza o canvas
     class ComportamentoAtualizador extends TickerBehaviour {
 
-        public ComportamentoAtualizador(Agent agente) {
-            super(agente, 30);
+        public ComportamentoAtualizador(Agent agente, int intervalo) {
+            super(agente, intervalo);
         }
 
         @Override

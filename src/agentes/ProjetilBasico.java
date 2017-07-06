@@ -23,4 +23,8 @@ public class ProjetilBasico extends AgenteBase {
     public String getNomeSprite() {
         return getClass().getSimpleName() + "_" + time.name();
     }
+
+    @Override
+    public void update() {
+    }
 }

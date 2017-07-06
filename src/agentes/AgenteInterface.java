@@ -7,8 +7,7 @@ import jade.core.Agent;
 import java.util.List;
 
 /**
- * Responsabilidade:
- * - Coletar informações do ambiente de agentes e informar a interface gráfica (sistema externo)
+ * Coleta informações sobre os agentes do sistema e passa para a interface gráfica
  */
 public class AgenteInterface extends Agent {
 
@@ -17,6 +16,6 @@ public class AgenteInterface extends Agent {
     @Override
     protected void setup() {
         canvas = (CanvasJogo)getArguments()[0];
-        addBehaviour(new ComportamentoInterface(this, canvas));
+        addBehaviour(new ComportamentoInterface(this, 30, canvas));
     }
 }

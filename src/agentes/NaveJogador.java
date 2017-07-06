@@ -12,4 +12,8 @@ public class NaveJogador extends AgenteBase {
         super.setup();
         rp.adicionarGetter("vida", () -> vida);
     }
+
+    @Override
+    public void update() {
+    }
 }

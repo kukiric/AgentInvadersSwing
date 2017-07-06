@@ -6,4 +6,8 @@ public class NaveCuradoura extends AgenteBase {
     protected void setup() {
         super.setup();
     }
+
+    @Override
+    public void update() {
+    }
 }

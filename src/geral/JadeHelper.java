@@ -4,11 +4,9 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
-import jade.domain.AMSService;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAException;
-import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
@@ -23,15 +21,16 @@ import java.util.function.Function;
  */
 public class JadeHelper {
 
+    private static ProfileImpl perfil = new ProfileImpl("localhost", 0, null);
     private static JadeHelper instancia;
     private AgentContainer ac;
+    private Runtime rt;
 
     private JadeHelper() {
         // Cria a instância do JADE
-        Runtime rt = Runtime.instance();
+        rt = Runtime.instance();
         rt.setCloseVM(true);
-        ProfileImpl p = new ProfileImpl("localhost", 0, null);
-        ac = rt.createMainContainer(p);
+        ac = rt.createMainContainer(perfil);
     }
 
     public static JadeHelper instancia() {
