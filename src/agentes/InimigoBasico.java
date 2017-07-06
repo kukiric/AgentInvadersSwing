@@ -11,5 +11,9 @@ public class InimigoBasico extends AgenteBase {
     protected void setup() {
         super.setup();
         rp.adicionarGetter("vida", () -> vida);
+        int id = (int)getArguments()[0];
+        // Escolhe a posição desejada de acordo com seu id
+        x = 40;
+        y = 40;
     }
 }

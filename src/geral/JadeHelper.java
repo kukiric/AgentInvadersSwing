@@ -4,15 +4,18 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.domain.AMSService;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Responsabilidade:
@@ -59,12 +62,16 @@ public class JadeHelper {
         return criaAgente(nome, classe, new Object[] {});
     }
 
-    public AgentController[] criaAgentes(String templateNome, String classe, int num) {
+    public AgentController[] criaAgentes(String templateNome, String classe, int num, Function<Integer, Object[]> provedorArgs) {
         AgentController[] agentes = new AgentController[num];
         for (int i = 0; i < num; i++) {
-            agentes[i] = criaAgente(templateNome + "_" + i, classe);
+            agentes[i] = criaAgente(templateNome + ":" + i, classe, provedorArgs.apply(i));
         }
         return agentes;
+    }
+
+    public AgentController[] criaAgentes(String templateNome, String classe, int num) {
+        return criaAgentes(templateNome, classe, num, (i) -> new Object[] {});
     }
 
     public AgentController getAgenteLocal(String nome) {

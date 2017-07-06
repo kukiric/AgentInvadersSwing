@@ -1,10 +1,11 @@
 package agentes;
 
-import comportamentos.RetornoPropriedade;
+import comportamentos.ComportamentoGetProp;
 import geral.Ator;
 import geral.JadeHelper;
 import jade.core.Agent;
 import java.util.Random;
+import protocolos.GetProp;
 
 /**
  * Responsabilidade:
@@ -18,7 +19,7 @@ public abstract class AgenteBase extends Agent {
         Neutro
     }
 
-    protected RetornoPropriedade rp;
+    protected ComportamentoGetProp rp;
     public int x, y;
     public Time time;
     public float tamanho;
@@ -28,7 +29,7 @@ public abstract class AgenteBase extends Agent {
         x = rand.nextInt(400);
         y = rand.nextInt(400);
         time = Time.Neutro;
-        rp = new RetornoPropriedade();
+        rp = new ComportamentoGetProp(this);
         rp.adicionarGetter("x", () -> x);
         rp.adicionarGetter("y", () -> y);
         rp.adicionarGetter("time", () -> time);
@@ -38,7 +39,7 @@ public abstract class AgenteBase extends Agent {
 
     @Override
     protected void setup() {
-        JadeHelper.instancia().registrarServico(this, "ai_getProp");
+        JadeHelper.instancia().registrarServico(this, GetProp.nome());
         addBehaviour(rp);
     }
 

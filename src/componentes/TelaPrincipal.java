@@ -1,6 +1,7 @@
 package componentes;
 
 import geral.JadeHelper;
+import geral.PausaGlobal;
 import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -49,9 +50,12 @@ public class TelaPrincipal extends JFrame {
 
         // Inicializa o JADE e o ambiente
         jade = JadeHelper.instancia();
-        jade.criaAgente("Gerenciador", "agentes.AgenteGerenciador");
-        jade.criaAgente("Interface", "agentes.AgenteInterface", new Object[] {canvas});
+        jade.criaAgente("gerenciador", "agentes.AgenteGerenciador");
+        jade.criaAgente("interface", "agentes.AgenteInterface", new Object[] {canvas});
         jade.criaAgente("rma", "jade.tools.rma.rma");
+        
+        // Imediatamente pausa todos os agentes
+        PausaGlobal.pause = true;
     }
 
     private void teclaPressionada(int codigo, int mod) {
@@ -59,11 +63,15 @@ public class TelaPrincipal extends JFrame {
             case KeyEvent.VK_ESCAPE:
                 confirmarSair();
                 break;
+            case KeyEvent.VK_SPACE:
+                PausaGlobal.pause = !PausaGlobal.pause;
+                break;
             case KeyEvent.VK_R:
                 // Cria um novo RMA se ele não existe
                 if (jade.getAgenteLocal("rma") == null) {
                     jade.criaAgente("rma", "jade.tools.rma.rma");
                 }
+                break;
         }
     }
 

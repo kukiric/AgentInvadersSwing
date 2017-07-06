@@ -1,6 +1,7 @@
 package agentes;
 
 import geral.JadeHelper;
+import geral.PausaGlobal;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 
@@ -16,9 +17,9 @@ public class AgenteGerenciador extends Agent {
             public void action() {
                 // Cria os agentes do jogo
                 JadeHelper jade = JadeHelper.instancia();
-                jade.criaAgentes("InimigoBasico", "agentes.InimigoBasico", 30);
-                jade.criaAgente("NaveJogador", "agentes.NaveJogador");
-                jade.criaAgente("NaveCuradoura", "agentes.NaveCuradoura");
+                jade.criaAgentes("inimigo", "agentes.InimigoBasico", 15, (i) -> new Integer[] {i});
+                jade.criaAgente("jogador", "agentes.NaveJogador");
+                //jade.criaAgente("curadoura", "agentes.NaveCuradoura");
                 System.out.println("AgenteGerenciador: Terminada a criação de agentes");
                 doDelete();
             }

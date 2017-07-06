@@ -1,9 +1,11 @@
 package geral;
 
+import java.io.Serializable;
+
 /**
  * Representa um objeto no canvas
  */
-public class Ator {
+public class Ator implements Serializable {
     public String nomeSprite;
     public Direcao dir;
     public int x;

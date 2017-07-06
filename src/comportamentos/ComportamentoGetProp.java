@@ -1,47 +1,53 @@
 package comportamentos;
 
-import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Supplier;
+import protocolos.GetProp;
 
 /**
- * Responsabilidade:
- * - Tratar qualquer mensagem que peça o valor de alguma proriedade interna desse agente
+ * Comportamento que trata o protocolo GetProp da aplicação
  */
-public class RetornoPropriedade extends CyclicBehaviour {
+public class ComportamentoGetProp extends CyclicBehaviour {
 
-    private Map<String, Supplier> getters;
+    public interface Getter extends Supplier<Serializable> {}
 
-    public RetornoPropriedade() {
+    private Map<String, Getter> getters;
+
+    public ComportamentoGetProp(Agent agente) {
+        super(agente);
         getters = new HashMap<>();
     }
 
-    public void adicionarGetter(String prop, Supplier getter) {
+    public void adicionarGetter(String prop, Getter getter) {
         getters.put(prop, getter);
     }
 
     @Override
     public void action() {
         // Busca mensagens compatíveis na fila de espera
-        MessageTemplate filtro = new MessageTemplate((ACLMessage msg) -> {
-            return msg.getProtocol().equals("ai_getProp") && msg.getPerformative() == ACLMessage.REQUEST;
-        });
+        MessageTemplate filtro = GetProp.getTemplateFiltro(ACLMessage.REQUEST);
         ACLMessage msg = getAgent().receive(filtro);
         // Trata a mensagem se ela existir
         if (msg != null) {
             String nomeProp = msg.getContent();
-            Supplier getter = getters.get(nomeProp);
+            Getter getter = getters.get(nomeProp);
             ACLMessage resp = msg.createReply();
             // Responde a mensagem como válida se a propriedade existir
             if (getter != null) {
-                Object prop = getter.get();
+                Serializable prop = getter.get();
                 resp.setOntology(prop.getClass().getTypeName());
-                resp.setContent(prop.toString());
+                try {
+                    resp.setContentObject(prop);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
                 resp.setPerformative(ACLMessage.INFORM);
             }
             // Senão, responde com um erro
@@ -54,16 +60,5 @@ public class RetornoPropriedade extends CyclicBehaviour {
         else {
             block();
         }
-    }
-
-    /**
-     * Cria uma mensagem pedindo o valor de alguma propriedade
-     */
-    public static ACLMessage criarMensagem(String prop) {
-        ACLMessage msg = new ACLMessage();
-        msg.setProtocol("ai_getProp");
-        msg.setPerformative(ACLMessage.REQUEST);
-        msg.setContent(prop);
-        return msg;
     }
 }
