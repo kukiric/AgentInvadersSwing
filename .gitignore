@@ -1,4 +1,4 @@
-# Arquivos locai do NetBeans
+# Arquivos locais do NetBeans
 nbproject/private/
 # Arquivos compilados
 build/
@@ -6,6 +6,11 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+# Tudo na pasta de .jars menos bibliotecas
+!dist/
+dist/*
+!dist/lib
 # Arquivos criados pelo JADE
 APDescription.txt
 MTPs-Main-Container.txt
+

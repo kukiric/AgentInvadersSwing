@@ -4,12 +4,10 @@ import comportamentos.ComportamentoGetProp;
 import geral.Ator;
 import geral.JadeHelper;
 import jade.core.Agent;
-import java.util.Random;
 import protocolos.GetProp;
 
 /**
- * Responsabilidade:
- * - Representar as propriedades básicas de um agente físico qualquer no sistema
+ * Representa as propriedades básicas de todos os agentes físicos (não-gerenciadores) no sistema
  */
 public abstract class AgenteBase extends Agent {
 
@@ -22,18 +20,17 @@ public abstract class AgenteBase extends Agent {
     protected ComportamentoGetProp rp;
     public int x, y;
     public Time time;
-    public float tamanho;
+    public double tamanho;
+    public double angulo;
 
     AgenteBase() {
-        Random rand = new Random();
-        x = rand.nextInt(400);
-        y = rand.nextInt(400);
         time = Time.Neutro;
         rp = new ComportamentoGetProp(this);
         rp.adicionarGetter("x", () -> x);
         rp.adicionarGetter("y", () -> y);
         rp.adicionarGetter("time", () -> time);
         rp.adicionarGetter("tamanho", () -> tamanho);
+        rp.adicionarGetter("angulo", () -> angulo);
         rp.adicionarGetter("definicaoAtor", () -> getDefinicaoAtor());
     }
 
@@ -53,6 +50,6 @@ public abstract class AgenteBase extends Agent {
     }
 
     public Ator getDefinicaoAtor() {
-        return new Ator(getNomeSprite(), x, y);
+        return new Ator(getNomeSprite(), x, y, angulo, 1);
     }
 }

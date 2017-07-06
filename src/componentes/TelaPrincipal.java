@@ -13,10 +13,9 @@ import javax.swing.UIManager;
 import geral.Sprites;
 
 /**
- * Responsabilidades:
- * - Criar a janela onde o jogo será desenhado
- * - Passar todos os eventos para o jogo
- * - Desenhar elementos adicionais sobre o canvas
+ * - Cria a janela onde o jogo será desenhado
+ * - Passa todos os eventos para o jogo
+ * - Desenha elementos adicionais sobre o canvas
  */
 public class TelaPrincipal extends JFrame {
 
@@ -48,14 +47,14 @@ public class TelaPrincipal extends JFrame {
             }
         });
 
+        // Pausa imediatamente no início (para configuração do RMA)
+        PausaGlobal.pause = true;
+
         // Inicializa o JADE e o ambiente
         jade = JadeHelper.instancia();
         jade.criaAgente("gerenciador", "agentes.AgenteGerenciador");
         jade.criaAgente("interface", "agentes.AgenteInterface", new Object[] {canvas});
         jade.criaAgente("rma", "jade.tools.rma.rma");
-        
-        // Imediatamente pausa todos os agentes
-        PausaGlobal.pause = true;
     }
 
     private void teclaPressionada(int codigo, int mod) {
@@ -64,7 +63,15 @@ public class TelaPrincipal extends JFrame {
                 confirmarSair();
                 break;
             case KeyEvent.VK_SPACE:
-                PausaGlobal.pause = !PausaGlobal.pause;
+                if (PausaGlobal.pause) {
+                    PausaGlobal.pause = false;
+                    System.out.println("Simulação despausada");
+                }
+                else {
+                    PausaGlobal.pause = true;
+                    canvas.repaint();
+                    System.out.println("Simulação pausada");
+                }
                 break;
             case KeyEvent.VK_R:
                 // Cria um novo RMA se ele não existe

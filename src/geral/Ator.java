@@ -7,18 +7,20 @@ import java.io.Serializable;
  */
 public class Ator implements Serializable {
     public String nomeSprite;
-    public Direcao dir;
+    public double angulo;
+    public double escala;
     public int x;
     public int y;
 
-    public Ator(String nomeSprite, int x, int y) {
+    public Ator(String nomeSprite, int x, int y, double angulo, double escala) {
         this.nomeSprite = nomeSprite;
-        this.dir = Direcao.Cima;
+        this.angulo = angulo;
+        this.escala = escala;
         this.x = x;
         this.y = y;
     }
 
     public Ator() {
-        this("Undefined", 0, 0);
+        this("Undefined", 0, 0, 0, 1);
     }
 }
