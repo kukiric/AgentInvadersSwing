@@ -13,8 +13,7 @@ public class EventoJogo {
     public enum Tipo {
         Dano,
         Cura,
-        Fim,
-        Destruida
+        OutraDestruida
     }
 
     public static final class Mensagem implements Serializable {
@@ -27,10 +26,10 @@ public class EventoJogo {
         }
     }
 
-    public static MessageTemplate getTemplateFiltro(int performativa) {
+    public static MessageTemplate getTemplateFiltro() {
         return new MessageTemplate((msg) -> {
             return nomeServico().equals(msg.getProtocol())
-                && performativa == msg.getPerformative();
+                && ACLMessage.INFORM == msg.getPerformative();
         });
     }
 

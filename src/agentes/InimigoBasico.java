@@ -14,6 +14,7 @@ public class InimigoBasico extends AgenteNave {
         super(100, 1, 1, 0);
         this.time = Time.Inimigo;
         this.rng = new Random();
+        this.tamanho = 30;
     }
 
     @Override
@@ -44,8 +45,9 @@ public class InimigoBasico extends AgenteNave {
 
     @Override
     public void update(double delta) {
-        x = xBase + Math.sin(tempoMovimentacao) * 125;
-        super.update(delta);
         tempoMovimentacao += delta;
+        // Anda pra trás e pra frente
+        moverPara(xBase + Math.sin(tempoMovimentacao) * 125, yBase);
+        super.update(delta);
     }
 }

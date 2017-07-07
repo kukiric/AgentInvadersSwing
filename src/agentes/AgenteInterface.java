@@ -31,7 +31,7 @@ public class AgenteInterface extends Agent {
                     }
                 });
                 // Inicia em sequência
-                addSubBehaviour(new ComportamentoInterface(myAgent, 16, canvas));
+                addSubBehaviour(new ComportamentoInterface(myAgent, 50, canvas));
             }
         });
     }

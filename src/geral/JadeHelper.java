@@ -137,7 +137,7 @@ public class JadeHelper {
         }
     }
 
-    public static ACLMessage criaMensagemInscricao(Agent agente, String servico, String tipo) {
+    public static ACLMessage criaMensagemInscricaoDF(Agent agente, String servico, String tipo) {
         DFAgentDescription filtro = new DFAgentDescription();
         SearchConstraints sc = new SearchConstraints();
         filtro.addServices(criarServico(servico, tipo));

@@ -29,7 +29,7 @@ public class ComportamentoInscricao extends SequentialBehaviour {
         addSubBehaviour(new OneShotBehaviour(agente) {
             @Override
             public void action() {
-                ACLMessage msg = JadeHelper.criaMensagemInscricao(agente, GetProp.nomeServico(), "");
+                ACLMessage msg = JadeHelper.criaMensagemInscricaoDF(agente, GetProp.nomeServico(), "");
                 agente.send(msg);
             }
         });

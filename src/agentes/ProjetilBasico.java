@@ -1,20 +1,25 @@
 package agentes;
 
+import comportamentos.ComportamentoGetPropClient;
 import comportamentos.ComportamentoInscricao;
 import geral.Ator;
 import geral.JadeHelper;
 import geral.Time;
 import jade.core.AID;
+import jade.lang.acl.ACLMessage;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import servicos.EventoJogo;
 import servicos.GetProp;
 
 public class ProjetilBasico extends AgenteBase {
 
+    // Objetos de interesse desse projétil
     private Map<Ator, AID> alvos;
 
     public ProjetilBasico() {
-        this.tamanho = 2;
+        this.tamanho = 4.5;
         this.alvos = new HashMap<>();
     }
 
@@ -22,15 +27,33 @@ public class ProjetilBasico extends AgenteBase {
     protected void setup() {
         super.setup();
         // Faz a leitura dos parâmetros
-        this.time = (Time)getArguments()[0];
-        this.angulo = (double)getArguments()[1];
-        this.x = (double)getArguments()[2];
-        this.y = (double)getArguments()[3];
+        time = (Time)getArguments()[0];
+        angulo = (double)getArguments()[1];
+        x = (double)getArguments()[2];
+        y = (double)getArguments()[3];
         // Procura todos os agentes disponíveis no DF
-        send(JadeHelper.criaMensagemInscricao(this, GetProp.nomeServico(), getClass().getSimpleName()));
+        send(JadeHelper.criaMensagemInscricaoDF(this, GetProp.nomeServico(), getClass().getSimpleName()));
         // Recebe informações de todos os agentes de interesse (time oposto não neutro)
         addBehaviour(new ComportamentoInscricao(this, GetProp.nomeServico(), true, agentes -> {
             GetProp.enviarInscricao(this, agentes);
+        }));
+        // Trata as mensagens recebidas durante a inscrição
+        addBehaviour(new ComportamentoGetPropClient(this, msg -> {
+            if (msg.prop.equals("definicaoAtor")) {
+                Ator ator = (Ator) msg.valor;
+                // Imediatamente remove os agentes que não são de interesse (neutros ou do mesmo time)
+                if (ator.time == this.time || ator.time == Time.Neutro) {
+                    GetProp.enviarCancelamento(this, Collections.singletonList(msg.agente));
+                    return;
+                }
+                // Danifica um ator se atingí-lo
+                double distancia = Math.sqrt(Math.pow(ator.x - this.x, 2) + Math.pow(ator.y - this.y, 2));
+                if (distancia < this.tamanho + ator.tamanho) {
+                    ACLMessage dmg = EventoJogo.criarMensagem(getAID(), Collections.singletonList(msg.agente), EventoJogo.Tipo.Dano, 25);
+                    send(dmg);
+                    doDelete();
+                }
+            }
         }));
     }
 

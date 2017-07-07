@@ -32,7 +32,7 @@ public abstract class AgenteBase extends Agent {
         this.rp = new ComportamentoGetPropServer(this);
         this.rp.adicionarGetter("definicaoAtor", () -> getDefinicaoAtor());
         // Configura a função update
-        addBehaviour(new TickerBehaviour(this, 16) {
+        addBehaviour(new TickerBehaviour(this, 50) {
             { setFixedPeriod(true); }
             @Override
             protected void onTick() {
@@ -72,6 +72,6 @@ public abstract class AgenteBase extends Agent {
     }
 
     public Ator getDefinicaoAtor() {
-        return new Ator(getNomeSprite(), time, 1.0, x, y, angulo, 0.5);
+        return new Ator(getNomeSprite(), time, 1.0, x, y, angulo, 1.0, tamanho);
     }
 }

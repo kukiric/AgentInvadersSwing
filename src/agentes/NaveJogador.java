@@ -8,10 +8,10 @@ public class NaveJogador extends AgenteNave {
     private Random rng;
     
     public NaveJogador() {
-        super(500, 3, 1.5, 0.2);
+        super(200, 3, 1.5, 0.2);
         this.rng = new Random();
         this.time = Time.Jogador;
-        this.tamanho = 25;
+        this.tamanho = 30;
     }
 
     @Override
@@ -20,6 +20,7 @@ public class NaveJogador extends AgenteNave {
         // Posição inicial do jogador
         x = 400;
         y = 550;
+        moverPara(x, y);
     }
 
     @Override

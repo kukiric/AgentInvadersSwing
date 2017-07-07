@@ -43,7 +43,7 @@ public final class ComportamentoGetPropServer extends ParallelBehaviour {
         msg.setSender(myAgent.getAID());
         msg.setLanguage("Java");
         msg.setProtocol(GetProp.nomeServico());
-        msg.setInReplyTo(prop + ":SUBSCRIPTION");
+        msg.setInReplyTo(prop);
         try {
             msg.setContentObject(valor);
         } catch (Exception e) {

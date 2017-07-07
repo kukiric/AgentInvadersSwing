@@ -70,7 +70,7 @@ public class CanvasJogo extends JPanel {
             AffineTransform at = new AffineTransform();
             at.translate(ator.x, ator.y);
             at.rotate(ator.angulo);
-            at.scale(ator.escala, ator.escala);
+            at.scale(ator.escalaSprite, ator.escalaSprite);
             g.setTransform(at);
             g.drawImage(img, -largura / 2, -altura / 2, this);
             // Desenha a vida do ator se ela estiver reduzida

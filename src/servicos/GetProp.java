@@ -66,6 +66,16 @@ public class GetProp {
         agente.send(msg);
     }
 
+    /**
+     * Cancela a inscrição
+     */
+    public static void enviarCancelamento(Agent agente, List<AID> destinatarios) {
+        ACLMessage msg = GetProp.criarMensagemPedido(agente.getAID(), destinatarios, "");
+        msg.setPerformative(ACLMessage.SUBSCRIBE);
+        msg.setContent("false");
+        agente.send(msg);
+    }
+
     public static String nomeServico() {
         return "ai_getProp";
     }
