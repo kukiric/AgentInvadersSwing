@@ -1,6 +1,10 @@
 package agentes;
 
+import comportamentos.ComportamentoRespondeCura;
+import geral.Ator;
 import geral.Time;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public final class NaveJogador extends AgenteNave {
@@ -9,9 +13,9 @@ public final class NaveJogador extends AgenteNave {
     private final double inicioX = 400;
     private final double inicioY = 550;
     private Random rng;
-    
+
     public NaveJogador() {
-        super(200, 3, 2.0, 0.2);
+        super(100, 3, 2.0, 0.2);
         this.rng = new Random();
         this.time = Time.Jogador;
         this.velocidade = 300;
@@ -30,6 +34,8 @@ public final class NaveJogador extends AgenteNave {
         // Posição inicial do jogador
         x = inicioX;
         y = inicioY;
+        // Pede a cura quando disponível
+        addBehaviour(new ComportamentoRespondeCura(this, () -> vida, () -> vidaMax, () -> getDefinicaoAtor()));
     }
 
     @Override
@@ -47,16 +53,34 @@ public final class NaveJogador extends AgenteNave {
     @Override
     public void update(double delta) {
         super.update(delta);
-        // Desvia balas e tenta acompanhar o movimento dos inimigos
-//        List<Ator> projeteis = ambiente.getColisoes(x, y, 100, outro -> {
-//            return outro.tipo.equals(ProjetilBasico.class.getSimpleName())
-//                && outro.time != this.time;
-//        });
-//        for (Ator a : projeteis) {
-//            // TODO: lógica de desvio
-//        }
-        // Movimentação básica
-        tempoMovimentacao += delta * 1.73;
-        moverPara(inicioX + Math.sin(tempoMovimentacao) * 400, inicioY);
+        List<Ator> projeteisEsquerda = new ArrayList<>();
+        List<Ator> projeteisDireita = new ArrayList<>();
+        // Desvia para a direção com menos projéteis
+        List<Ator> projeteis = ambiente.getColisoes(x, y, 50, outro -> {
+            return outro.tipo.equals(ProjetilBasico.class.getSimpleName())
+                && outro.time != this.time;
+        });
+        for (Ator a : projeteis) {
+            // Divide os projeteis
+            if (a.x < this.x) {
+                projeteisEsquerda.add(a);
+            }
+            else {
+                projeteisDireita.add(a);
+            }
+        }
+        // Sem preferência
+        if (projeteisEsquerda.size() == projeteisDireita.size()) {
+            tempoMovimentacao += delta;
+            moverPara(inicioX + Math.sin(tempoMovimentacao) * 200, inicioY);
+        }
+        // Desvia para a esquerda
+        else if (projeteisEsquerda.size() < projeteisDireita.size()) {
+            moverPara(x - 50, inicioY);
+        }
+        // Desvia para a direita
+        else {
+            moverPara(x + 50, inicioY);
+        }
     }
 }

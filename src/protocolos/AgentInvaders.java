@@ -37,6 +37,8 @@ public class AgentInvaders {
     public static ACLMessage criarMensagem(AID remetente, List<AID> destinatarios, TipoEvento tipo, Serializable parametro) {
         ACLMessage msg = new ACLMessage();
         msg.setLanguage("Java");
+        // Seta o tipo do evento na ontologia para visualização
+        msg.setOntology(tipo.name());
         msg.setProtocol(nomeProtocolo());
         msg.setPerformative(ACLMessage.INFORM);
         try {

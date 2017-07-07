@@ -1,5 +1,6 @@
 package agentes;
 
+import comportamentos.ComportamentoRespondeCura;
 import geral.JadeHelper;
 import geral.Time;
 import jade.core.AID;
@@ -80,6 +81,8 @@ public final class InimigoBasico extends AgenteNave {
                 }
             }
         });
+        // Pede a cura quando disponível
+        addBehaviour(new ComportamentoRespondeCura(this, () -> vida, () -> vidaMax, () -> getDefinicaoAtor()));
     }
 
     @Override
@@ -99,7 +102,7 @@ public final class InimigoBasico extends AgenteNave {
         if (jogadorVivo()) {
             // Baixa chance de atirar a cada tick, depende de quantos aliados sobraram
             int numAliados = aliados.size();
-            double chance = 1.0 / (1000 - numAliados * 50);
+            double chance = 1.0 / (200 - (15 - numAliados) * 15);
             return rng.nextDouble() < chance;
         }
         return false;

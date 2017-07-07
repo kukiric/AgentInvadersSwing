@@ -33,8 +33,8 @@ public final class NaveCuradora extends AgenteNave {
     private int alvoVida;
     private int curado;
     // Tempo aleatório
-    private final double minTempo = 2;
-    private final double maxTempo = 3;
+    private final double minTempo = 10;
+    private final double maxTempo = 20;
     // Começa fora da tela
     private final double inicioX = -400;
     private final double inicioY = 200;
@@ -46,7 +46,7 @@ public final class NaveCuradora extends AgenteNave {
         this.estado = Estado.Esperando;
         this.rng = new Random();
         this.listado = false;
-        this.velocidade = 350;
+        this.velocidade = 500;
         this.tempo = 0;
     }
 
@@ -92,7 +92,6 @@ public final class NaveCuradora extends AgenteNave {
                 if (tempo > tempoNext) {
                     estado = Estado.Buscando;
                     tempoNext = rng.nextDouble() * (maxTempo - minTempo) + minTempo;
-                    System.out.println("vou curar");
                 }
                 break;
             }
@@ -102,19 +101,17 @@ public final class NaveCuradora extends AgenteNave {
                     JadeHelper.instancia().registrarServico(this, "indice", "cura", AgentInvaders.nomeProtocolo());
                     listado = true;
                     tempo = 0;
-                    System.out.println("esperando pedidos");
                 }
                 tempo += delta;
                 // Dois segundos no máximo em modo de busca
                 if (tempo > 2.0) {
                     if (alvo != null) {
                         estado = Estado.Curando;
-                        System.out.println("vou curar");
+                        tempo = 0;
                     }
                     // Volta se ninguém pediu cura :(
                     else {
                         estado = Estado.Voltando;
-                        System.out.println("ninguem pediu ajuda");
                     }
                     // Remove do DF
                     JadeHelper.instancia().removerServico(this);
@@ -123,19 +120,14 @@ public final class NaveCuradora extends AgenteNave {
                 break;
             }
             case Curando: {
-                // Está dentro da distância de cura?
-                if (Ambiente.distancia(x, y, alvo.x, alvo.y) < 100) {
-                    pararMovimento();
-                    // Cura um pouco do agente
-                    if (curado < 100) {
-                        int cura = 10;
-                        AgentInvaders.enviarMensagem(this, alvo.agenteDono, AgentInvaders.TipoEvento.Dano, cura);
-                        curado += cura;
-                    }
-                }
-                // Senão, chega mais perto
-                else {
-                    moverPara(alvo.x, alvo.y);
+                tempo += delta;
+                moverPara(alvo.x, alvo.y);
+                // Está dentro da distância de cura, ou passou do limite de tempo?
+                if (Ambiente.distancia(x, y, alvo.x, alvo.y) < 1.0 || tempo > 5.0) {
+                    // Cura o agente em 100 pontos de vida
+                    AgentInvaders.enviarMensagem(this, alvo.agenteDono, AgentInvaders.TipoEvento.Cura, 100);
+                    // E volta
+                    estado = Estado.Voltando;
                 }
             }
             case Voltando: {
@@ -145,7 +137,6 @@ public final class NaveCuradora extends AgenteNave {
                 }
                 // Muda para o próximo estado
                 else {
-                    System.out.println("estou de volta");
                     estado = Estado.Esperando;
                     tempoNext = rng.nextDouble() * (maxTempo - minTempo) + minTempo;
                     tempo = 0;

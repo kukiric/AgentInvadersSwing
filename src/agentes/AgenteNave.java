@@ -79,12 +79,16 @@ public abstract class AgenteNave extends AgenteBase {
 
     protected void tratarEvento(AgentInvaders.Evento evento) {
         switch (evento.tipo) {
-            case Dano:
-                receberDano((Integer) evento.valor);
+            case Dano: {
+                int qtd = (Integer) evento.valor;
+                receberDano(qtd);
                 break;
-            case Cura:
-                receberDano(0 - ((Integer) evento.valor));
+            }
+            case Cura: {
+                int qtd = (Integer) evento.valor;
+                receberDano(-qtd);
                 break;
+            }
         }
     }
 
