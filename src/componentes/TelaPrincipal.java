@@ -1,5 +1,6 @@
 package componentes;
 
+import geral.Ambiente;
 import geral.JadeHelper;
 import geral.PausaGlobal;
 import java.awt.EventQueue;
@@ -52,8 +53,11 @@ public class TelaPrincipal extends JFrame {
 
         // Inicializa o JADE e o ambiente
         jade = JadeHelper.instancia();
-        jade.criarAgente("gerenciador", "agentes.AgenteGerenciador");
-        jade.criarAgente("interface", "agentes.AgenteInterface", new Object[] {canvas});
+        Ambiente ambiente = new Ambiente();
+
+        // Cria os agentes simulados
+        jade.criarAgente("gerenciador", "agentes.AgenteGerenciador", new Object[] {ambiente});
+        jade.criarAgente("interface", "agentes.AgenteInterface", new Object[] {ambiente, canvas});
         jade.criarAgente("rma", "jade.tools.rma.rma");
     }
 

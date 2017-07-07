@@ -34,6 +34,7 @@ public class Sprites {
         imagens.put("NaveJogador", arquivo("Assets/Sprites/playerShip3_blue.png"));
         imagens.put("InimigoBasico", arquivo("Assets/Sprites/Ships/spaceShips_001.png"));
         imagens.put("NaveCuradora", arquivo("Assets/Sprites/ufoGreen.png"));
+        imagens.put("ProjetilBasico_Neutro", arquivo("Assets/Sprites/Lasers/laserGreen13.png"));
         imagens.put("ProjetilBasico_Jogador", arquivo("Assets/Sprites/Lasers/laserBlue07.png"));
         imagens.put("ProjetilBasico_Inimigo", arquivo("Assets/Sprites/Lasers/laserRed07.png"));
         imagens.put("BarraFundo", arquivo("Assets/UI/grey_button02.png"));

@@ -1,11 +1,13 @@
 package geral;
 
+import jade.core.AID;
 import java.io.Serializable;
 
 /**
  * Representa um objeto no canvas
  */
 public class Ator implements Serializable {
+    public final AID agenteDono;
     public final String nomeSprite;
     public final Time time;
     public final double tamanho;
@@ -15,7 +17,8 @@ public class Ator implements Serializable {
     public final double x;
     public final double y;
 
-    public Ator(String nomeSprite, Time time, double vida, double x, double y, double angulo, double escalaSprite, double tamanho) {
+    public Ator(AID agenteDono, String nomeSprite, Time time, double vida, double x, double y, double angulo, double escalaSprite, double tamanho) {
+        this.agenteDono = agenteDono;
         this.escalaSprite = escalaSprite;
         this.nomeSprite = nomeSprite;
         this.tamanho = tamanho;

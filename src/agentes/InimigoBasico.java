@@ -21,7 +21,7 @@ public class InimigoBasico extends AgenteNave {
     protected void setup() {
         super.setup();
         // Escolhe a posição base desejada de acordo com o seu id
-        int id = (int)getArguments()[0];
+        int id = (int)getArguments()[1];
         x = xBase = (id % 5) * 100 + 200;
         y = yBase = (id / 5) * 100 + 50;
         moverPara(x, y);

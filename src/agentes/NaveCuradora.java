@@ -1,6 +1,5 @@
 package agentes;
 
-import comportamentos.ComportamentoGetPropClient;
 import geral.Ator;
 import jade.core.AID;
 import java.util.HashMap;
@@ -13,11 +12,6 @@ public class NaveCuradora extends AgenteNave {
     public NaveCuradora() {
         super(100, 1, 1, 1);
         this.alvos = new HashMap<>();
-        addBehaviour(new ComportamentoGetPropClient(this, msg -> {
-            if (msg.prop == "definicaoAtor") {
-                alvos.put(msg.agente, (Ator)msg.valor);
-            }
-        }));
     }
 
     @Override

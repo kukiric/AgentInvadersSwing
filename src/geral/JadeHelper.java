@@ -86,13 +86,13 @@ public class JadeHelper {
         }
     }
 
-    public static ServiceDescription criarServico(String nome, String tipo) {
+    public static ServiceDescription criarServico(String nome, String protocolo) {
         ServiceDescription svc = new ServiceDescription();
         if (!nome.isEmpty()) {
             svc.setName(nome);
         }
-        if (!tipo.isEmpty()) {
-            svc.setType(tipo);
+        if (!protocolo.isEmpty()) {
+            svc.addProtocols(protocolo);
         }
         return svc;
     }
@@ -111,10 +111,10 @@ public class JadeHelper {
         }
     }
 
-    public List<AID> buscarServico(Agent agente, String servico) {
+    public List<AID> buscarServico(Agent agente, String servico, String protocolo) {
         ArrayList<AID> agentes = new ArrayList<>();
         DFAgentDescription filtro = new DFAgentDescription();
-        filtro.addProtocols(servico);
+        filtro.addServices(criarServico(servico, protocolo));
         try {
             DFAgentDescription[] provedores = DFService.search(agente, filtro);
             agentes.ensureCapacity(provedores.length);
@@ -137,11 +137,11 @@ public class JadeHelper {
         }
     }
 
-    public static ACLMessage criaMensagemInscricaoDF(Agent agente, String servico, String tipo) {
-        DFAgentDescription filtro = new DFAgentDescription();
+    public static ACLMessage criaMensagemInscricaoDF(Agent agente, String servico, String protocolo) {
+        DFAgentDescription dfd = new DFAgentDescription();
         SearchConstraints sc = new SearchConstraints();
-        filtro.addServices(criarServico(servico, tipo));
+        dfd.addServices(criarServico(servico, protocolo));
         sc.setMaxResults(new Long(100));
-        return DFService.createSubscriptionMessage(agente, agente.getDefaultDF(), filtro, sc);
+        return DFService.createSubscriptionMessage(agente, agente.getDefaultDF(), dfd, sc);
     }
 }

@@ -1,4 +1,4 @@
-package servicos;
+package protocolos;
 
 import geral.JadeHelper;
 import jade.core.AID;
@@ -8,19 +8,19 @@ import jade.lang.acl.MessageTemplate;
 import java.io.Serializable;
 import java.util.List;
 
-public class EventoJogo {
+public class AgentInvaders {
 
-    public enum Tipo {
+    public enum TipoEvento {
         Dano,
         Cura,
         OutraDestruida
     }
 
-    public static final class Mensagem implements Serializable {
-        public final Tipo tipo;
+    public static final class Evento implements Serializable {
+        public final TipoEvento tipo;
         public final Serializable valor;
 
-        public Mensagem(Tipo tipo, Serializable valor) {
+        public Evento(TipoEvento tipo, Serializable valor) {
             this.tipo = tipo;
             this.valor = valor;
         }
@@ -28,18 +28,18 @@ public class EventoJogo {
 
     public static MessageTemplate getTemplateFiltro() {
         return new MessageTemplate((msg) -> {
-            return nomeServico().equals(msg.getProtocol())
+            return nomeProtocolo().equals(msg.getProtocol())
                 && ACLMessage.INFORM == msg.getPerformative();
         });
     }
 
-    public static ACLMessage criarMensagem(AID remetente, List<AID> destinatarios, Tipo tipo, Serializable parametro) {
+    public static ACLMessage criarMensagem(AID remetente, List<AID> destinatarios, TipoEvento tipo, Serializable parametro) {
         ACLMessage msg = new ACLMessage();
         msg.setLanguage("Java");
-        msg.setProtocol(nomeServico());
+        msg.setProtocol(nomeProtocolo());
         msg.setPerformative(ACLMessage.INFORM);
         try {
-            msg.setContentObject(new Mensagem(tipo, parametro));
+            msg.setContentObject(new Evento(tipo, parametro));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -53,11 +53,11 @@ public class EventoJogo {
         return msg;
     }
 
-    public static String nomeServico() {
-        return "ai_evento";
+    public static String nomeProtocolo() {
+        return "agentinvaders-generic";
     }
 
     public static ServiceDescription descricao(String tipo) {
-        return JadeHelper.criarServico(nomeServico(), tipo);
+        return JadeHelper.criarServico(nomeProtocolo(), tipo);
     }
 }

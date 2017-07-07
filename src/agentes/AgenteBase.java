@@ -1,6 +1,6 @@
 package agentes;
 
-import comportamentos.ComportamentoGetPropServer;
+import geral.Ambiente;
 import geral.Ator;
 import geral.JadeHelper;
 import geral.PausaGlobal;
@@ -8,17 +8,14 @@ import geral.Time;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import servicos.EventoJogo;
-import servicos.GetProp;
+import protocolos.AgentInvaders;
 
 /**
  * Representa as propriedades básicas de todos os agentes físicos (não-gerenciadores) no sistema
  */
 public abstract class AgenteBase extends Agent {
 
-    protected ServiceDescription svcGetProp;
-    protected ServiceDescription svcEventos;
-    protected ComportamentoGetPropServer rp;
+    protected Ambiente ambiente;
 
     public double x, y;
     public double tamanho;
@@ -27,12 +24,8 @@ public abstract class AgenteBase extends Agent {
 
     AgenteBase() {
         this.time = Time.Neutro;
-        this.svcGetProp = GetProp.descricao(getClass().getSimpleName());
-        this.svcEventos = EventoJogo.descricao(getClass().getSimpleName());
-        this.rp = new ComportamentoGetPropServer(this);
-        this.rp.adicionarGetter("definicaoAtor", () -> getDefinicaoAtor());
         // Configura a função update
-        addBehaviour(new TickerBehaviour(this, 50) {
+        addBehaviour(new TickerBehaviour(this, 30) {
             { setFixedPeriod(true); }
             @Override
             protected void onTick() {
@@ -47,26 +40,29 @@ public abstract class AgenteBase extends Agent {
     @Override
     protected void setup() {
         JadeHelper.instancia().registrarServico(this, getServicos());
-        addBehaviour(rp);
+        ambiente = (Ambiente) getArguments()[0];
+        ambiente.atualizarAtor(getAID(), getDefinicaoAtor());
     }
 
     @Override
     protected void takeDown() {
         // Remove do DF
         JadeHelper.instancia().removerServico(this);
-        // Avisa todo mundo da morte desse agente
-        rp.notificarProp("morto", new Boolean(true));
+        // Remove do ambiente
+        ambiente.removerAtor(getAID());
     }
 
     protected ServiceDescription[] getServicos() {
+        ServiceDescription svc = new ServiceDescription();
+        svc.addProtocols(AgentInvaders.nomeProtocolo());
+        svc.setType(getClass().getSimpleName());
         return new ServiceDescription[] {
-            svcGetProp,
-            svcEventos
+            
         };
     }
 
     public void update(double delta) {
-        rp.notificarProp("definicaoAtor", getDefinicaoAtor());
+        ambiente.atualizarAtor(getAID(), getDefinicaoAtor());
     }
 
     public String getNomeSprite() {
@@ -74,6 +70,6 @@ public abstract class AgenteBase extends Agent {
     }
 
     public Ator getDefinicaoAtor() {
-        return new Ator(getNomeSprite(), time, 1.0, x, y, angulo, 1.0, tamanho);
+        return new Ator(getAID(), getNomeSprite(), time, 1.0, x, y, angulo, 1.0, tamanho);
     }
 }
