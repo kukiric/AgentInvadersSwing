@@ -21,9 +21,10 @@ import protocolos.GetProp;
  */
 public class ComportamentoInscricao extends SequentialBehaviour {
 
-    public ComportamentoInscricao(Agent agente, String protocolo, Consumer<List<AID>> listener) {
-        // Filtro de mensagens
+    public ComportamentoInscricao(Agent agente, String protocolo, boolean ignorarMsgResposta, Consumer<List<AID>> listener) {
+        // Filtros de mensagens
         MessageTemplate filtro = new MessageTemplate(msg -> "fipa-subscribe".equals(msg.getProtocol()));
+        MessageTemplate filtroAssinado = new MessageTemplate(msg -> protocolo.equals(msg.getProtocol()) && msg.getPerformative() == ACLMessage.AGREE);
         // Inicia a inscrição
         addSubBehaviour(new OneShotBehaviour(agente) {
             @Override
@@ -36,13 +37,19 @@ public class ComportamentoInscricao extends SequentialBehaviour {
         addSubBehaviour(new CyclicBehaviour(agente) {
             @Override
             public void action() {
+                // Consome todas as mensagens de inscrição bem sucedida
+                if (ignorarMsgResposta) {
+                    ACLMessage msg = myAgent.receive(filtroAssinado);
+                    if (msg != null) {
+                        block();
+                    }
+                }
                 // Recebe uma mensagem de cada vez
                 ACLMessage msg = myAgent.receive(filtro);
                 if (msg != null) {
                     // Decodifica a mensagem
                     try {
                         DFAgentDescription[] notificacoes = DFService.decodeNotification(msg.getContent());
-                        // Pede para receber notificações diretas dos agentes
                         List<AID> agentes = Stream.of(notificacoes).map(n -> n.getName()).collect(Collectors.toList());
                         listener.accept(agentes);
                     }
