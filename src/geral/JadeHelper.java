@@ -84,10 +84,12 @@ public class JadeHelper {
         }
     }
 
-    public void registrarServico(Agent agente, String protocolo) {
+    public void registrarServico(Agent agente, String[] protocolos) {
         DFAgentDescription info = new DFAgentDescription();
         info.setName(agente.getAID());
-        info.addProtocols(protocolo);
+        for (String protocolo : protocolos) {
+            info.addProtocols(protocolo);
+        }
         try {
             DFService.register(agente, info);
         } catch (FIPAException e) {
@@ -113,14 +115,6 @@ public class JadeHelper {
         return agentes;
     }
 
-    public ACLMessage criaMensagemInscricao(Agent agente, String protocolo) {
-        DFAgentDescription filtro = new DFAgentDescription();
-        SearchConstraints sc = new SearchConstraints();
-        filtro.addProtocols(protocolo);
-        sc.setMaxResults(new Long(100));
-        return DFService.createSubscriptionMessage(agente, agente.getDefaultDF(), filtro, sc);
-    }
-
     public void removerServico(Agent agente) {
         try {
             DFService.deregister(agente);
@@ -128,5 +122,13 @@ public class JadeHelper {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public ACLMessage criaMensagemInscricao(Agent agente, String protocolo) {
+        DFAgentDescription filtro = new DFAgentDescription();
+        SearchConstraints sc = new SearchConstraints();
+        filtro.addProtocols(protocolo);
+        sc.setMaxResults(new Long(100));
+        return DFService.createSubscriptionMessage(agente, agente.getDefaultDF(), filtro, sc);
     }
 }

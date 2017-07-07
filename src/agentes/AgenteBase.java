@@ -7,6 +7,7 @@ import geral.PausaGlobal;
 import geral.Time;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
+import protocolos.EventoJogo;
 import protocolos.GetProp;
 
 /**
@@ -39,7 +40,7 @@ public abstract class AgenteBase extends Agent {
 
     @Override
     protected void setup() {
-        JadeHelper.instancia().registrarServico(this, GetProp.nome());
+        JadeHelper.instancia().registrarServico(this, getProtocolos());
         addBehaviour(rp);
     }
 
@@ -47,6 +48,13 @@ public abstract class AgenteBase extends Agent {
     protected void takeDown() {
         JadeHelper.instancia().removerServico(this);
         rp.notificarProp("morto", new Boolean(true));
+    }
+
+    protected String[] getProtocolos() {
+        return new String[] {
+            GetProp.nomeProtocolo(),
+            EventoJogo.nomeProtrocolo()
+        };
     }
 
     public void update(double delta) {

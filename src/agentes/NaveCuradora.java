@@ -1,16 +1,34 @@
 package agentes;
 
+import comportamentos.ComportamentoGetPropClient;
+import geral.Ator;
+import jade.core.AID;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class NaveCuradora extends AgenteNave {
 
+    private Map<AID, Ator> alvos;
+
     public NaveCuradora() {
-        super(100, 0, 0);
+        super(100, 1, 1, 1);
+        this.alvos = new HashMap<>();
+        addBehaviour(new ComportamentoGetPropClient(this, msg -> {
+            if (msg.prop == "definicaoAtor") {
+                alvos.put(msg.agente, (Ator)msg.valor);
+            }
+        }));
     }
 
     @Override
     protected void setup() {
         super.setup();
+        // Começa fora da tela
         x = -400;
         y = 200;
+        moverPara(x, y);
     }
 
     @Override

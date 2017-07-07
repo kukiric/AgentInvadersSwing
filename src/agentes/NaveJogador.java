@@ -1,13 +1,15 @@
 package agentes;
 
 import geral.Time;
+import java.util.Random;
 
 public class NaveJogador extends AgenteNave {
 
-    public int vida;
+    private Random rng;
     
     public NaveJogador() {
-        super(500, 3, 1.0);
+        super(500, 3, 1.5, 0.2);
+        this.rng = new Random();
         this.time = Time.Jogador;
         this.tamanho = 25;
     }
@@ -28,12 +30,13 @@ public class NaveJogador extends AgenteNave {
 
     @Override
     protected double anguloTiro() {
-        // Para cima
-        return 0.0;
+        // Para cima, com um pouco de imprecisão
+        return rng.nextDouble() * 0.1 - 0.05;
     }
 
     @Override
     public void update(double delta) {
         super.update(delta);
+        // Desvia balas e tenta acompanhar o movimento dos inimigos
     }
 }

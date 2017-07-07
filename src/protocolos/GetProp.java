@@ -14,7 +14,7 @@ public class GetProp {
     /**
      * Mensagem empacotada para resposta de inscrição
      */
-    public static class Mensagem {
+    public static class Mensagem implements Serializable {
         public final AID agente;
         public final String prop;
         public final Serializable valor;
@@ -32,12 +32,13 @@ public class GetProp {
     public static ACLMessage criarMensagemPedido(AID remetente, List<AID> destinatarios, String prop) {
         ACLMessage msg = new ACLMessage();
         msg.setLanguage("Java");
-        msg.setProtocol(GetProp.nome());
+        msg.setProtocol(nomeProtocolo());
         msg.setPerformative(ACLMessage.REQUEST);
         msg.setContent(prop);
         for (AID destinatario : destinatarios) {
             msg.addReceiver(destinatario);
         }
+        msg.setSender(remetente);
         msg.addReplyTo(remetente);
         return msg;
     }
@@ -47,7 +48,7 @@ public class GetProp {
      */
     public static MessageTemplate getTemplateFiltro(int performativa) {
         return new MessageTemplate((msg) -> {
-            return nome().equals(msg.getProtocol())
+            return nomeProtocolo().equals(msg.getProtocol())
                 && performativa == msg.getPerformative();
         });
     }
@@ -55,7 +56,7 @@ public class GetProp {
     /**
      * Retorna o nome do protocolo
      */
-    public static String nome() {
+    public static String nomeProtocolo() {
         return "ai_getProp";
     }
 }

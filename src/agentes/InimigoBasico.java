@@ -8,12 +8,12 @@ public class InimigoBasico extends AgenteNave {
     private int xBase;
     private int yBase;
     private double tempoMovimentacao;
-    private Random rngTiro;
+    private Random rng;
 
     public InimigoBasico() {
-        super(100, 1, 1);
+        super(100, 1, 1, 0);
         this.time = Time.Inimigo;
-        this.rngTiro = new Random();
+        this.rng = new Random();
     }
 
     @Override
@@ -23,12 +23,17 @@ public class InimigoBasico extends AgenteNave {
         int id = (int)getArguments()[0];
         x = xBase = (id % 5) * 100 + 200;
         y = yBase = (id / 5) * 100 + 50;
+        moverPara(x, y);
     }
 
     @Override
     protected boolean podeAtirar() {
-        // Baixa chance de atirar a cada tick
-        return rngTiro.nextDouble() < 1.0/500;
+        // Testa se a nave se encontra na linha de frente (abaixo das outras)
+        if (y > 200) {
+            // Baixa chance de atirar a cada tick
+            return rng.nextDouble() < 1.0/200;
+        }
+        return false;
     }
 
     @Override
@@ -39,8 +44,8 @@ public class InimigoBasico extends AgenteNave {
 
     @Override
     public void update(double delta) {
+        x = xBase + Math.sin(tempoMovimentacao) * 125;
         super.update(delta);
         tempoMovimentacao += delta;
-        x = xBase + Math.sin(tempoMovimentacao) * 125;
     }
 }
