@@ -9,7 +9,7 @@ import jade.core.behaviours.OneShotBehaviour;
  * Responsabilidade:
  * - Criar e gerenciar todos os agentes do sistema
  */
-public class AgenteGerenciador extends Agent {
+public final class AgenteGerenciador extends Agent {
 
     private Ambiente ambiente;
 

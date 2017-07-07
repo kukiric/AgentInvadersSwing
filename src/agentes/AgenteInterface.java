@@ -8,7 +8,7 @@ import jade.core.behaviours.TickerBehaviour;
 /**
  * Coleta informações sobre os agentes do sistema e passa para a interface gráfica
  */
-public class AgenteInterface extends Agent {
+public final class AgenteInterface extends Agent {
 
     private CanvasJogo canvas;
     private Ambiente ambiente;

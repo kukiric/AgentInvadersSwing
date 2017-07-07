@@ -63,11 +63,12 @@ public class TelaPrincipal extends JFrame {
 
     private void teclaPressionada(int codigo, int mod) {
         switch (codigo) {
-            case KeyEvent.VK_ESCAPE:
+            case KeyEvent.VK_ESCAPE: {
                 // Fecha a aplicação
                 confirmarSair();
                 break;
-            case KeyEvent.VK_SPACE:
+            }
+            case KeyEvent.VK_SPACE: {
                 // Pausa a simulação
                 if (PausaGlobal.pause) {
                     PausaGlobal.pause = false;
@@ -78,12 +79,14 @@ public class TelaPrincipal extends JFrame {
                     System.out.println("Simulação pausada");
                 }
                 break;
-            case KeyEvent.VK_R:
+            }
+            case KeyEvent.VK_R: {
                 // Cria o RMA se ele não existe
                 if (jade.getAgenteLocal("rma") == null) {
                     jade.criarAgente("rma", "jade.tools.rma.rma");
                 }
                 break;
+            }
         }
     }
 

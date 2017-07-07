@@ -3,7 +3,6 @@ package agentes;
 import geral.JadeHelper;
 import geral.Time;
 import jade.core.AID;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
@@ -16,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 import protocolos.AgentInvaders;
 
-public class InimigoBasico extends AgenteNave {
+public final class InimigoBasico extends AgenteNave {
 
     // Junta as informações de qual name morreu
     private static class InfoDestruida implements Serializable {
@@ -44,7 +43,12 @@ public class InimigoBasico extends AgenteNave {
         this.aliados = new HashSet<>();
         this.time = Time.Inimigo;
         this.rng = new Random();
+        this.velocidade = 100;
         this.tamanho = 30;
+    }
+
+    private boolean jogadorVivo() {
+        return ambiente.getAllAtores().stream().anyMatch(a -> a.tipo.equals(NaveJogador.class.getSimpleName()));
     }
 
     @Override
@@ -56,7 +60,6 @@ public class InimigoBasico extends AgenteNave {
         coluna = id % 5;
         x = xBase = coluna * 100 + 200;
         y = yBase = linha * 100 + 50;
-        moverPara(x, y);
         // Se registra no DF para encontrar seus aliados
         JadeHelper.instancia().registrarServico(this, "indice", "inimigo", AgentInvaders.nomeProtocolo());
         // E busca os outros
@@ -77,34 +80,6 @@ public class InimigoBasico extends AgenteNave {
                 }
             }
         });
-        // Responde à morte de um aliado
-        addBehaviour(new CyclicBehaviour(this) {
-            @Override
-            public void action() {
-                ACLMessage msg = receive(AgentInvaders.getTemplateFiltro());
-                if (msg != null) {
-                    try {
-                        AgentInvaders.Evento evt = (AgentInvaders.Evento) msg.getContentObject();
-                        if (evt.tipo == AgentInvaders.TipoEvento.OutraDestruida) {
-                            InfoDestruida info = (InfoDestruida) evt.valor;
-                            // Move para baixo se ela estiver na mesma coluna
-                            if (info.coluna == coluna && info.linha > linha) {
-                                yBase = yBase + 100;
-                            }
-                            // Remove a aliada da lista
-                            aliados.remove(info.agente);
-                        }
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                        System.exit(1);
-                    }
-                }
-                else {
-                    block();
-                }
-            }
-        });
     }
 
     @Override
@@ -113,17 +88,21 @@ public class InimigoBasico extends AgenteNave {
         // Se retira do DF
         JadeHelper.instancia().removerServico(this);
         // Avisa os outros que esse morreu
-        List<AID> listAliados = new ArrayList<>(aliados);
-        ACLMessage msg = AgentInvaders.criarMensagem(getAID(), listAliados, AgentInvaders.TipoEvento.OutraDestruida, new InfoDestruida(linha, coluna, getAID()));
+        List<AID> listaAliados = new ArrayList<>(aliados);
+        ACLMessage msg = AgentInvaders.criarMensagem(getAID(), listaAliados, AgentInvaders.TipoEvento.OutraDestruida, new InfoDestruida(linha, coluna, getAID()));
         send(msg);
     }
 
     @Override
     protected boolean podeAtirar() {
-        // Baixa chance de atirar a cada tick, depende de quantos aliados sobraram
-        int numAliados = aliados.size();
-        double chance = 1.0 / (1000 - numAliados * 50);
-        return rng.nextDouble() < chance;
+        // Atira somente enquanto o jogador ainda estiver vivo
+        if (jogadorVivo()) {
+            // Baixa chance de atirar a cada tick, depende de quantos aliados sobraram
+            int numAliados = aliados.size();
+            double chance = 1.0 / (1000 - numAliados * 50);
+            return rng.nextDouble() < chance;
+        }
+        return false;
     }
 
     @Override
@@ -133,10 +112,30 @@ public class InimigoBasico extends AgenteNave {
     }
 
     @Override
+    protected void tratarEvento(AgentInvaders.Evento evento) {
+        super.tratarEvento(evento);
+        if (evento.tipo == AgentInvaders.TipoEvento.OutraDestruida) {
+            InfoDestruida info = (InfoDestruida) evento.valor;
+            // Move para baixo se ela estiver na mesma coluna
+            if (info.coluna == coluna && info.linha > linha) {
+                yBase = yBase + 100;
+            }
+            // Remove a aliada da lista
+            aliados.remove(info.agente);
+        }
+    }
+
+    @Override
     public void update(double delta) {
-        tempoMovimentacao += delta;
-        // Anda pra trás e pra frente
-        moverPara(xBase + Math.sin(tempoMovimentacao) * 125, yBase);
+        // Anda de um lado para o outro enquanto o jogador existir
+        if (jogadorVivo()) {
+            tempoMovimentacao += delta;
+            moverPara(xBase + Math.sin(tempoMovimentacao) * 125, yBase);
+        }
+        // Sai do mapa por baixo quando ele morrer
+        else {
+            moverPara(xBase, 2000);
+        }
         super.update(delta);
     }
 }

@@ -1,11 +1,11 @@
 package protocolos;
 
-import geral.JadeHelper;
 import jade.core.AID;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 public class AgentInvaders {
@@ -13,6 +13,7 @@ public class AgentInvaders {
     public enum TipoEvento {
         Dano,
         Cura,
+        PedidoCura,
         OutraDestruida
     }
 
@@ -51,6 +52,11 @@ public class AgentInvaders {
         msg.setSender(remetente);
         msg.addReplyTo(remetente);
         return msg;
+    }
+
+    public static void enviarMensagem(Agent agente, AID destinatario, TipoEvento tipo, Serializable parametro) {
+        ACLMessage msg = criarMensagem(destinatario, Collections.singletonList(destinatario), tipo, parametro);
+        agente.send(msg);
     }
 
     public static String nomeProtocolo() {

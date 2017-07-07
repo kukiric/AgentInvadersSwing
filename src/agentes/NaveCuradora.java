@@ -1,26 +1,61 @@
 package agentes;
 
+import geral.Ambiente;
 import geral.Ator;
-import jade.core.AID;
-import java.util.HashMap;
-import java.util.Map;
+import geral.JadeHelper;
+import java.io.Serializable;
+import java.util.Random;
+import protocolos.AgentInvaders;
 
-public class NaveCuradora extends AgenteNave {
+public final class NaveCuradora extends AgenteNave {
 
-    private Map<AID, Ator> alvos;
+    public final static class PedidoCura implements Serializable {
+        public final int vida;
+        public final Ator quem;
+
+        public PedidoCura(int vida, Ator quem) {
+            this.vida = vida;
+            this.quem = quem;
+        }
+    }
+
+    enum Estado {
+        Esperando,
+        Buscando,
+        Curando,
+        Voltando
+    };
+
+    private Estado estado;
+    private Random rng;
+    private boolean listado;
+    private Ator alvo;
+    private int alvoVida;
+    private int curado;
+    // Tempo aleatório
+    private final double minTempo = 2;
+    private final double maxTempo = 3;
+    // Começa fora da tela
+    private final double inicioX = -400;
+    private final double inicioY = 200;
+    private double tempoNext;
+    private double tempo;
 
     public NaveCuradora() {
         super(100, 1, 1, 1);
-        this.alvos = new HashMap<>();
+        this.estado = Estado.Esperando;
+        this.rng = new Random();
+        this.listado = false;
+        this.velocidade = 350;
+        this.tempo = 0;
     }
 
     @Override
     protected void setup() {
         super.setup();
-        // Começa fora da tela
-        x = -400;
-        y = 200;
-        moverPara(x, y);
+        x = inicioX;
+        y = inicioY;
+        tempoNext = rng.nextDouble() * (maxTempo - minTempo) + minTempo;
     }
 
     @Override
@@ -36,7 +71,87 @@ public class NaveCuradora extends AgenteNave {
     }
 
     @Override
+    protected void tratarEvento(AgentInvaders.Evento evento) {
+        super.tratarEvento(evento);
+        // Recebe pedidos de cura
+        if (evento.tipo == AgentInvaders.TipoEvento.PedidoCura) {
+            PedidoCura pedido = (PedidoCura) evento.valor;
+            // Grava essa nave se ela precisar da maior cura
+            if (alvo == null || pedido.vida < alvoVida) {
+                alvo = pedido.quem;
+            }
+        }
+    }
+
+    @Override
     public void update(double delta) {
+        switch(estado) {
+            case Esperando: {
+                // Checa se é hora de oferecer serviços de cura
+                tempo += delta;
+                if (tempo > tempoNext) {
+                    estado = Estado.Buscando;
+                    tempoNext = rng.nextDouble() * (maxTempo - minTempo) + minTempo;
+                    System.out.println("vou curar");
+                }
+                break;
+            }
+            case Buscando: {
+                // Lista o serviço no DF
+                if (!listado) {
+                    JadeHelper.instancia().registrarServico(this, "indice", "cura", AgentInvaders.nomeProtocolo());
+                    listado = true;
+                    tempo = 0;
+                    System.out.println("esperando pedidos");
+                }
+                tempo += delta;
+                // Dois segundos no máximo em modo de busca
+                if (tempo > 2.0) {
+                    if (alvo != null) {
+                        estado = Estado.Curando;
+                        System.out.println("vou curar");
+                    }
+                    // Volta se ninguém pediu cura :(
+                    else {
+                        estado = Estado.Voltando;
+                        System.out.println("ninguem pediu ajuda");
+                    }
+                    // Remove do DF
+                    JadeHelper.instancia().removerServico(this);
+                    listado = false;
+                }
+                break;
+            }
+            case Curando: {
+                // Está dentro da distância de cura?
+                if (Ambiente.distancia(x, y, alvo.x, alvo.y) < 100) {
+                    pararMovimento();
+                    // Cura um pouco do agente
+                    if (curado < 100) {
+                        int cura = 10;
+                        AgentInvaders.enviarMensagem(this, alvo.agenteDono, AgentInvaders.TipoEvento.Dano, cura);
+                        curado += cura;
+                    }
+                }
+                // Senão, chega mais perto
+                else {
+                    moverPara(alvo.x, alvo.y);
+                }
+            }
+            case Voltando: {
+                // Volta para o início
+                if (Ambiente.distancia(x, y, inicioX, inicioY) > 1.0) {
+                    moverPara(inicioX, inicioY);
+                }
+                // Muda para o próximo estado
+                else {
+                    System.out.println("estou de volta");
+                    estado = Estado.Esperando;
+                    tempoNext = rng.nextDouble() * (maxTempo - minTempo) + minTempo;
+                    tempo = 0;
+                }
+            }
+        }
         super.update(delta);
     }
 }

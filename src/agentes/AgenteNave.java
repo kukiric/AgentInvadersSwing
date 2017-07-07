@@ -17,6 +17,7 @@ public abstract class AgenteNave extends AgenteBase {
     private double tempoPorTiro;
     private double contadorTempo;
     private int contadorTiro;
+    private boolean movendo;
 
     protected double xDestino;
     protected double yDestino;
@@ -31,6 +32,7 @@ public abstract class AgenteNave extends AgenteBase {
         this.tempoPorTiro = tempoPorTiro;
         this.contadorTempo = 0;
         this.contadorTiro = 0;
+        this.movendo = false;
         this.velocidade = 100;
         this.vidaMax = vidaMax;
         this.vida = this.vidaMax;
@@ -47,7 +49,7 @@ public abstract class AgenteNave extends AgenteBase {
                 if (msg != null) {
                     AgentInvaders.Evento info = null;
                     try {
-                        trataEvento((AgentInvaders.Evento) msg.getContentObject());
+                        tratarEvento((AgentInvaders.Evento) msg.getContentObject());
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -65,7 +67,7 @@ public abstract class AgenteNave extends AgenteBase {
 
     protected abstract double anguloTiro();
 
-    protected void recebeDano(int qtd) {
+    protected void receberDano(int qtd) {
         vida -= qtd;
         if (vida > vidaMax) {
             vida = vidaMax;
@@ -75,40 +77,50 @@ public abstract class AgenteNave extends AgenteBase {
         }
     }
 
-    protected void trataEvento(AgentInvaders.Evento evento) {
+    protected void tratarEvento(AgentInvaders.Evento evento) {
         switch (evento.tipo) {
             case Dano:
-                recebeDano((Integer) evento.valor);
+                receberDano((Integer) evento.valor);
                 break;
             case Cura:
-                recebeDano(0 - ((Integer) evento.valor));
+                receberDano(0 - ((Integer) evento.valor));
                 break;
         }
     }
 
-    protected void doMover(double delta) {
-        // Testa a proximidade do local de destino
-        if (Double.compare(x, xDestino) != 0 || Double.compare(y, yDestino) != 0) {
-            // Ângulo da diferença de vetores
-            double anguloMover = Math.atan2(y - yDestino, x - xDestino) - Math.PI / 2;
-            // Teorema de Pitágoras
-            double distancia = Math.sqrt(Math.pow(x - xDestino, 2) + Math.pow(y - yDestino, 2));
-            // Avanço na direção
-            double deltaX =  Math.sin(anguloMover) * delta * velocidade;
-            double deltaY = -Math.cos(anguloMover) * delta * velocidade;
-            // Clamping (corte no intervalo)
-            deltaX = deltaX >  distancia ?  distancia : deltaX;
-            deltaX = deltaX < -distancia ? -distancia : deltaX;
-            deltaY = deltaY >  distancia ?  distancia : deltaY;
-            deltaY = deltaY < -distancia ? -distancia : deltaY;
-            x += deltaX;
-            y += deltaY;
+    private void doMover(double delta) {
+        if (movendo) {
+            // Testa a proximidade do local de destino
+            if (Double.compare(x, xDestino) != 0 || Double.compare(y, yDestino) != 0) {
+                // Ângulo da diferença de vetores
+                double anguloMover = Math.atan2(y - yDestino, x - xDestino) - Math.PI / 2;
+                // Teorema de Pitágoras
+                double distancia = Math.sqrt(Math.pow(x - xDestino, 2) + Math.pow(y - yDestino, 2));
+                // Avanço na direção
+                double deltaX =  Math.sin(anguloMover) * delta * velocidade;
+                double deltaY = -Math.cos(anguloMover) * delta * velocidade;
+                // Clamping (corte no intervalo)
+                deltaX = deltaX >  distancia ?  distancia : deltaX;
+                deltaX = deltaX < -distancia ? -distancia : deltaX;
+                deltaY = deltaY >  distancia ?  distancia : deltaY;
+                deltaY = deltaY < -distancia ? -distancia : deltaY;
+                x += deltaX;
+                y += deltaY;
+            }
+            else {
+                movendo = false;
+            }
         }
     }
 
     protected void moverPara(double x, double y) {
         xDestino = x;
         yDestino = y;
+        movendo = true;
+    }
+
+    protected void pararMovimento() {
+        movendo = false;
     }
 
     @Override
