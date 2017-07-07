@@ -7,20 +7,19 @@ import geral.JadeHelper;
 import geral.Time;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import servicos.EventoJogo;
 import servicos.GetProp;
 
 public class ProjetilBasico extends AgenteBase {
 
-    // Objetos de interesse desse projétil
-    private Map<Ator, AID> alvos;
+    private List<AID> pontosInscricao;
 
     public ProjetilBasico() {
         this.tamanho = 4.5;
-        this.alvos = new HashMap<>();
+        this.pontosInscricao = new ArrayList<>();
     }
 
     @Override
@@ -55,6 +54,13 @@ public class ProjetilBasico extends AgenteBase {
                 }
             }
         }));
+    }
+
+    @Override
+    protected void takeDown() {
+        super.takeDown();
+        // Remove as inscrições ativas quando morrer
+        GetProp.enviarCancelamento(this, pontosInscricao);
     }
 
     // Varia o tipo da sprite de acordo com quem atirou

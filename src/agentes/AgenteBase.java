@@ -52,7 +52,9 @@ public abstract class AgenteBase extends Agent {
 
     @Override
     protected void takeDown() {
+        // Remove do DF
         JadeHelper.instancia().removerServico(this);
+        // Avisa todo mundo da morte desse agente
         rp.notificarProp("morto", new Boolean(true));
     }
 
