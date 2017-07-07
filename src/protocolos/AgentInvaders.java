@@ -56,8 +56,4 @@ public class AgentInvaders {
     public static String nomeProtocolo() {
         return "agentinvaders-generic";
     }
-
-    public static ServiceDescription descricao(String tipo) {
-        return JadeHelper.criarServico(nomeProtocolo(), tipo);
-    }
 }

@@ -39,15 +39,12 @@ public abstract class AgenteBase extends Agent {
 
     @Override
     protected void setup() {
-        JadeHelper.instancia().registrarServico(this, getServicos());
         ambiente = (Ambiente) getArguments()[0];
         ambiente.atualizarAtor(getAID(), getDefinicaoAtor());
     }
 
     @Override
     protected void takeDown() {
-        // Remove do DF
-        JadeHelper.instancia().removerServico(this);
         // Remove do ambiente
         ambiente.removerAtor(getAID());
     }
@@ -70,6 +67,6 @@ public abstract class AgenteBase extends Agent {
     }
 
     public Ator getDefinicaoAtor() {
-        return new Ator(getAID(), getNomeSprite(), time, 1.0, x, y, angulo, 1.0, tamanho);
+        return new Ator(getAID(), getNomeSprite(), getClass().getSimpleName(), time, 1.0, x, y, angulo, 1.0, tamanho);
     }
 }

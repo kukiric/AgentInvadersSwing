@@ -86,14 +86,11 @@ public class JadeHelper {
         }
     }
 
-    public static ServiceDescription criarServico(String nome, String protocolo) {
+    public static ServiceDescription criarServico(String nome, String tipo, String protocolo) {
         ServiceDescription svc = new ServiceDescription();
-        if (!nome.isEmpty()) {
-            svc.setName(nome);
-        }
-        if (!protocolo.isEmpty()) {
-            svc.addProtocols(protocolo);
-        }
+        svc.setName(nome);
+        svc.setType(tipo);
+        svc.addProtocols(protocolo);
         return svc;
     }
 
@@ -111,10 +108,18 @@ public class JadeHelper {
         }
     }
 
-    public List<AID> buscarServico(Agent agente, String servico, String protocolo) {
+    public void registrarServico(Agent agente, String servico, String tipo, String protocolo) {
+        ServiceDescription svc = new ServiceDescription();
+        svc.setName(servico);
+        svc.setType(tipo);
+        svc.addProtocols(protocolo);
+        registrarServico(agente, new ServiceDescription[] {svc});
+    }
+
+    public List<AID> buscarServico(Agent agente, String servico, String tipo, String protocolo) {
         ArrayList<AID> agentes = new ArrayList<>();
         DFAgentDescription filtro = new DFAgentDescription();
-        filtro.addServices(criarServico(servico, protocolo));
+        filtro.addServices(criarServico(servico, tipo, protocolo));
         try {
             DFAgentDescription[] provedores = DFService.search(agente, filtro);
             agentes.ensureCapacity(provedores.length);
@@ -137,10 +142,10 @@ public class JadeHelper {
         }
     }
 
-    public static ACLMessage criaMensagemInscricaoDF(Agent agente, String servico, String protocolo) {
+    public static ACLMessage criaMensagemInscricaoDF(Agent agente, String servico, String tipo, String protocolo) {
         DFAgentDescription dfd = new DFAgentDescription();
         SearchConstraints sc = new SearchConstraints();
-        dfd.addServices(criarServico(servico, protocolo));
+        dfd.addServices(criarServico(servico, tipo, protocolo));
         sc.setMaxResults(new Long(100));
         return DFService.createSubscriptionMessage(agente, agente.getDefaultDF(), dfd, sc);
     }

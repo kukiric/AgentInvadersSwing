@@ -137,6 +137,6 @@ public abstract class AgenteNave extends AgenteBase {
     public Ator getDefinicaoAtor() {
         // Converte o valor da vida para uma escala de 0 a 1
         double fVida = (double) vida / vidaMax;
-        return new Ator(getAID(), getNomeSprite(), time, fVida, x, y, angulo, 0.5, tamanho);
+        return new Ator(getAID(), getNomeSprite(), getClass().getSimpleName(), time, fVida, x, y, angulo, 0.5, tamanho);
     }
 }

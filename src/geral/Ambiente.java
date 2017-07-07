@@ -19,25 +19,33 @@ public class Ambiente {
     }
 
     public void atualizarAtor(AID agente, Ator ator) {
-        atores.put(agente, ator);
+        synchronized (atores) {
+            atores.put(agente, ator);
+        }
     }
 
     public void removerAtor(AID agente) {
-        atores.remove(agente);
+        synchronized (atores) {
+            atores.remove(agente);
+        }
     }
 
     public List<Ator> getAllAtores() {
-        return new ArrayList<Ator>(atores.values());
+        synchronized (atores) {
+            return new ArrayList<Ator>(atores.values());
+        }
     }
 
     public List<Ator> getColisoes(double x, double y, double tamanho, Function<Ator, Boolean> filtro) {
         ArrayList<Ator> resultados = new ArrayList<>();
-        for (Ator a : atores.values()) {
-            // Checagem de distância
-            if (distancia(x, y, a.x, a.y) <= tamanho + a.tamanho) {
-                // Filtro custom
-                if (filtro.apply(a)) {
-                    resultados.add(a);
+        synchronized (atores) {
+            for (Ator a : atores.values()) {
+                // Checagem de distância
+                if (distancia(x, y, a.x, a.y) <= tamanho + a.tamanho) {
+                    // Filtro custom
+                    if (filtro.apply(a)) {
+                        resultados.add(a);
+                    }
                 }
             }
         }
