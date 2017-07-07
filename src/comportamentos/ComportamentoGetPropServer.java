@@ -1,6 +1,5 @@
 package comportamentos;
 
-import geral.Ator;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -13,7 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
-import protocolos.GetProp;
+import servicos.GetProp;
 
 /**
  * Comportamento que trata o protocolo GetProp da aplicação
@@ -43,7 +42,7 @@ public final class ComportamentoGetPropServer extends ParallelBehaviour {
         msg.setPerformative(ACLMessage.INFORM);
         msg.setSender(myAgent.getAID());
         msg.setLanguage("Java");
-        msg.setProtocol(GetProp.nomeProtocolo());
+        msg.setProtocol(GetProp.nomeServico());
         msg.setInReplyTo(prop + ":SUBSCRIPTION");
         try {
             msg.setContentObject(valor);

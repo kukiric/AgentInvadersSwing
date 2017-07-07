@@ -52,9 +52,9 @@ public class TelaPrincipal extends JFrame {
 
         // Inicializa o JADE e o ambiente
         jade = JadeHelper.instancia();
-        jade.criaAgente("gerenciador", "agentes.AgenteGerenciador");
-        jade.criaAgente("interface", "agentes.AgenteInterface", new Object[] {canvas});
-        jade.criaAgente("rma", "jade.tools.rma.rma");
+        jade.criarAgente("gerenciador", "agentes.AgenteGerenciador");
+        jade.criarAgente("interface", "agentes.AgenteInterface", new Object[] {canvas});
+        jade.criarAgente("rma", "jade.tools.rma.rma");
     }
 
     private void teclaPressionada(int codigo, int mod) {
@@ -77,7 +77,7 @@ public class TelaPrincipal extends JFrame {
             case KeyEvent.VK_R:
                 // Cria o RMA se ele não existe
                 if (jade.getAgenteLocal("rma") == null) {
-                    jade.criaAgente("rma", "jade.tools.rma.rma");
+                    jade.criarAgente("rma", "jade.tools.rma.rma");
                 }
                 break;
         }

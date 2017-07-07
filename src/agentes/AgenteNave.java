@@ -81,7 +81,7 @@ public abstract class AgenteNave extends AgenteBase {
                 x,
                 y
             };
-            JadeHelper.instancia().criaAgente(nomeProjetil, "agentes.ProjetilBasico", opcoesProjetil);
+            JadeHelper.instancia().criarAgente(nomeProjetil, "agentes.ProjetilBasico", opcoesProjetil);
             contadorTempo = 0;
         }
         doMover(delta);

@@ -7,24 +7,30 @@ import geral.PausaGlobal;
 import geral.Time;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
-import protocolos.EventoJogo;
-import protocolos.GetProp;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import servicos.EventoJogo;
+import servicos.GetProp;
 
 /**
  * Representa as propriedades básicas de todos os agentes físicos (não-gerenciadores) no sistema
  */
 public abstract class AgenteBase extends Agent {
 
+    protected ServiceDescription svcGetProp;
+    protected ServiceDescription svcEventos;
     protected ComportamentoGetPropServer rp;
+
     public double x, y;
     public double tamanho;
     public double angulo;
     public Time time;
 
     AgenteBase() {
-        time = Time.Neutro;
-        rp = new ComportamentoGetPropServer(this);
-        rp.adicionarGetter("definicaoAtor", () -> getDefinicaoAtor());
+        this.time = Time.Neutro;
+        this.svcGetProp = GetProp.descricao(getClass().getSimpleName());
+        this.svcEventos = EventoJogo.descricao(getClass().getSimpleName());
+        this.rp = new ComportamentoGetPropServer(this);
+        this.rp.adicionarGetter("definicaoAtor", () -> getDefinicaoAtor());
         // Configura a função update
         addBehaviour(new TickerBehaviour(this, 16) {
             { setFixedPeriod(true); }
@@ -40,7 +46,7 @@ public abstract class AgenteBase extends Agent {
 
     @Override
     protected void setup() {
-        JadeHelper.instancia().registrarServico(this, getProtocolos());
+        JadeHelper.instancia().registrarServico(this, getServicos());
         addBehaviour(rp);
     }
 
@@ -50,10 +56,10 @@ public abstract class AgenteBase extends Agent {
         rp.notificarProp("morto", new Boolean(true));
     }
 
-    protected String[] getProtocolos() {
-        return new String[] {
-            GetProp.nomeProtocolo(),
-            EventoJogo.nomeProtrocolo()
+    protected ServiceDescription[] getServicos() {
+        return new ServiceDescription[] {
+            svcGetProp,
+            svcEventos
         };
     }
 

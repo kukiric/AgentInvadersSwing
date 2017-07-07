@@ -2,26 +2,16 @@ package comportamentos;
 
 import componentes.CanvasJogo;
 import geral.Ator;
-import geral.JadeHelper;
-import geral.PausaGlobal;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.TickerBehaviour;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import protocolos.GetProp;
+import servicos.GetProp;
 
 /**
  * Coleta a posição de todos os outros agentes para desenhar na tela
@@ -38,11 +28,9 @@ public final class ComportamentoInterface extends ParallelBehaviour {
         this.atores = new HashMap<>();
         this.canvas = canvas;
         // Se inscreve no diretório facilitador para todos os agentes que expõem propriedades
-        addSubBehaviour(new ComportamentoInscricao(agente, GetProp.nomeProtocolo(), true, agentes -> {
-            ACLMessage msgSub = GetProp.criarMensagemPedido(myAgent.getAID(), agentes, "");
-            msgSub.setPerformative(ACLMessage.SUBSCRIBE);
-            msgSub.setContent("true");
-            myAgent.send(msgSub);
+        addSubBehaviour(new ComportamentoInscricao(agente, GetProp.nomeServico(), true, agentes -> {
+            // E então manda uma inscrição direta para cada agente
+            GetProp.enviarInscricao(agente, agentes);
         }));
         // Trata o recebimento de atualizações dos agentes
         addSubBehaviour(new ComportamentoGetPropClient(agente, msg -> {

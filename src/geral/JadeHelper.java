@@ -6,7 +6,9 @@ import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.Property;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
@@ -46,7 +48,7 @@ public class JadeHelper {
         return ac;
     }
 
-    public AgentController criaAgente(String nome, String classe, Object[] args) {
+    public AgentController criarAgente(String nome, String classe, Object[] args) {
         AgentController agente = null;
         try {
             agente = ac.createNewAgent(nome, classe, args);
@@ -59,20 +61,20 @@ public class JadeHelper {
         return agente;
     }
 
-    public AgentController criaAgente(String nome, String classe) {
-        return criaAgente(nome, classe, new Object[] {});
+    public AgentController criarAgente(String nome, String classe) {
+        return criarAgente(nome, classe, new Object[] {});
     }
 
-    public AgentController[] criaAgentes(String templateNome, String classe, int num, Function<Integer, Object[]> provedorArgs) {
+    public AgentController[] criarAgentes(String templateNome, String classe, int num, Function<Integer, Object[]> provedorArgs) {
         AgentController[] agentes = new AgentController[num];
         for (int i = 0; i < num; i++) {
-            agentes[i] = criaAgente(templateNome + ":" + i, classe, provedorArgs.apply(i));
+            agentes[i] = criarAgente(templateNome + ":" + i, classe, provedorArgs.apply(i));
         }
         return agentes;
     }
 
-    public AgentController[] criaAgentes(String templateNome, String classe, int num) {
-        return criaAgentes(templateNome, classe, num, (i) -> new Object[] {});
+    public AgentController[] criarAgentes(String templateNome, String classe, int num) {
+        return criarAgentes(templateNome, classe, num, (i) -> new Object[] {});
     }
 
     public AgentController getAgenteLocal(String nome) {
@@ -84,11 +86,22 @@ public class JadeHelper {
         }
     }
 
-    public void registrarServico(Agent agente, String[] protocolos) {
+    public static ServiceDescription criarServico(String nome, String tipo) {
+        ServiceDescription svc = new ServiceDescription();
+        if (!nome.isEmpty()) {
+            svc.setName(nome);
+        }
+        if (!tipo.isEmpty()) {
+            svc.setType(tipo);
+        }
+        return svc;
+    }
+
+    public void registrarServico(Agent agente, ServiceDescription[] servicos) {
         DFAgentDescription info = new DFAgentDescription();
         info.setName(agente.getAID());
-        for (String protocolo : protocolos) {
-            info.addProtocols(protocolo);
+        for (ServiceDescription svc : servicos) {
+            info.addServices(svc);
         }
         try {
             DFService.register(agente, info);
@@ -98,10 +111,10 @@ public class JadeHelper {
         }
     }
 
-    public List<AID> buscarServico(Agent agente, String protocolo) {
+    public List<AID> buscarServico(Agent agente, String servico) {
         ArrayList<AID> agentes = new ArrayList<>();
         DFAgentDescription filtro = new DFAgentDescription();
-        filtro.addProtocols(protocolo);
+        filtro.addProtocols(servico);
         try {
             DFAgentDescription[] provedores = DFService.search(agente, filtro);
             agentes.ensureCapacity(provedores.length);
@@ -124,10 +137,10 @@ public class JadeHelper {
         }
     }
 
-    public ACLMessage criaMensagemInscricao(Agent agente, String protocolo) {
+    public static ACLMessage criaMensagemInscricao(Agent agente, String servico, String tipo) {
         DFAgentDescription filtro = new DFAgentDescription();
         SearchConstraints sc = new SearchConstraints();
-        filtro.addProtocols(protocolo);
+        filtro.addServices(criarServico(servico, tipo));
         sc.setMaxResults(new Long(100));
         return DFService.createSubscriptionMessage(agente, agente.getDefaultDF(), filtro, sc);
     }

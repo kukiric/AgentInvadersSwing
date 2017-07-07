@@ -14,22 +14,22 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import protocolos.GetProp;
+import servicos.GetProp;
 
 /**
  * Inscreve o agente em algum protocolo através do Diretório Facilitador e trata as mensagens recebidas
  */
 public class ComportamentoInscricao extends SequentialBehaviour {
 
-    public ComportamentoInscricao(Agent agente, String protocolo, boolean ignorarMsgResposta, Consumer<List<AID>> listener) {
+    public ComportamentoInscricao(Agent agente, String servico, boolean ignorarMsgResposta, Consumer<List<AID>> listener) {
         // Filtros de mensagens
         MessageTemplate filtro = new MessageTemplate(msg -> "fipa-subscribe".equals(msg.getProtocol()));
-        MessageTemplate filtroAssinado = new MessageTemplate(msg -> protocolo.equals(msg.getProtocol()) && msg.getPerformative() == ACLMessage.AGREE);
+        MessageTemplate filtroAssinado = new MessageTemplate(msg -> ":SUBSCRIBE".equals(msg.getInReplyTo()) && msg.getPerformative() == ACLMessage.AGREE);
         // Inicia a inscrição
         addSubBehaviour(new OneShotBehaviour(agente) {
             @Override
             public void action() {
-                ACLMessage msg = JadeHelper.instancia().criaMensagemInscricao(agente, GetProp.nomeProtocolo());
+                ACLMessage msg = JadeHelper.criaMensagemInscricao(agente, GetProp.nomeServico(), "");
                 agente.send(msg);
             }
         });
@@ -50,8 +50,8 @@ public class ComportamentoInscricao extends SequentialBehaviour {
                     // Decodifica a mensagem
                     try {
                         DFAgentDescription[] notificacoes = DFService.decodeNotification(msg.getContent());
-                        List<AID> agentes = Stream.of(notificacoes).map(n -> n.getName()).collect(Collectors.toList());
-                        listener.accept(agentes);
+                        List<AID> informacoes = Stream.of(notificacoes).map(n -> n.getName()).collect(Collectors.toList());
+                        listener.accept(informacoes);
                     }
                     catch (Exception e) {
                         e.printStackTrace();

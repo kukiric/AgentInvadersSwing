@@ -4,7 +4,6 @@ import componentes.CanvasJogo;
 import comportamentos.ComportamentoInterface;
 import geral.PausaGlobal;
 import jade.core.Agent;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 

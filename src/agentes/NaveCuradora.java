@@ -3,9 +3,7 @@ package agentes;
 import comportamentos.ComportamentoGetPropClient;
 import geral.Ator;
 import jade.core.AID;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NaveCuradora extends AgenteNave {

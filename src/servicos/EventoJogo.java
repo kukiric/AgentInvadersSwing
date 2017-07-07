@@ -1,11 +1,12 @@
-package protocolos;
+package servicos;
 
+import geral.JadeHelper;
 import jade.core.AID;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.io.Serializable;
 import java.util.List;
-import static protocolos.GetProp.nomeProtocolo;
 
 public class EventoJogo {
 
@@ -16,7 +17,7 @@ public class EventoJogo {
         Destruida
     }
 
-    public static class Mensagem implements Serializable {
+    public static final class Mensagem implements Serializable {
         public final Tipo tipo;
         public final Serializable valor;
 
@@ -28,7 +29,7 @@ public class EventoJogo {
 
     public static MessageTemplate getTemplateFiltro(int performativa) {
         return new MessageTemplate((msg) -> {
-            return nomeProtocolo().equals(msg.getProtocol())
+            return nomeServico().equals(msg.getProtocol())
                 && performativa == msg.getPerformative();
         });
     }
@@ -36,7 +37,7 @@ public class EventoJogo {
     public static ACLMessage criarMensagem(AID remetente, List<AID> destinatarios, Tipo tipo, Serializable parametro) {
         ACLMessage msg = new ACLMessage();
         msg.setLanguage("Java");
-        msg.setProtocol(nomeProtrocolo());
+        msg.setProtocol(nomeServico());
         msg.setPerformative(ACLMessage.INFORM);
         try {
             msg.setContentObject(new Mensagem(tipo, parametro));
@@ -53,7 +54,11 @@ public class EventoJogo {
         return msg;
     }
 
-    public static String nomeProtrocolo() {
+    public static String nomeServico() {
         return "ai_evento";
+    }
+
+    public static ServiceDescription descricao(String tipo) {
+        return JadeHelper.criarServico(nomeServico(), tipo);
     }
 }

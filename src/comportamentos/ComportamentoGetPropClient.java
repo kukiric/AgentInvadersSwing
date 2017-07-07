@@ -9,7 +9,7 @@ import jade.lang.acl.MessageTemplate;
 import java.io.Serializable;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import protocolos.GetProp;
+import servicos.GetProp;
 
 /**
  * Permite a receber notificações do protocolo GetProp em qualquer ator, executando uma função sempre que é recebida uma atualização

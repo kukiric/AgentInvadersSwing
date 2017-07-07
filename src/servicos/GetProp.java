@@ -1,6 +1,9 @@
-package protocolos;
+package servicos;
 
+import geral.JadeHelper;
 import jade.core.AID;
+import jade.core.Agent;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.io.Serializable;
@@ -14,7 +17,7 @@ public class GetProp {
     /**
      * Mensagem empacotada para resposta de inscrição
      */
-    public static class Mensagem implements Serializable {
+    public static final class Mensagem implements Serializable {
         public final AID agente;
         public final String prop;
         public final Serializable valor;
@@ -32,7 +35,7 @@ public class GetProp {
     public static ACLMessage criarMensagemPedido(AID remetente, List<AID> destinatarios, String prop) {
         ACLMessage msg = new ACLMessage();
         msg.setLanguage("Java");
-        msg.setProtocol(nomeProtocolo());
+        msg.setProtocol(nomeServico());
         msg.setPerformative(ACLMessage.REQUEST);
         msg.setContent(prop);
         for (AID destinatario : destinatarios) {
@@ -48,15 +51,26 @@ public class GetProp {
      */
     public static MessageTemplate getTemplateFiltro(int performativa) {
         return new MessageTemplate((msg) -> {
-            return nomeProtocolo().equals(msg.getProtocol())
+            return nomeServico().equals(msg.getProtocol())
                 && performativa == msg.getPerformative();
         });
     }
 
     /**
-     * Retorna o nome do protocolo
+     * Envia a inscrição para vários agentes
      */
-    public static String nomeProtocolo() {
+    public static void enviarInscricao(Agent agente, List<AID> destinatarios) {
+        ACLMessage msg = GetProp.criarMensagemPedido(agente.getAID(), destinatarios, "");
+        msg.setPerformative(ACLMessage.SUBSCRIBE);
+        msg.setContent("true");
+        agente.send(msg);
+    }
+
+    public static String nomeServico() {
         return "ai_getProp";
+    }
+
+    public static ServiceDescription descricao(String tipo) {
+        return JadeHelper.criarServico(nomeServico(), tipo);
     }
 }

@@ -1,20 +1,37 @@
 package agentes;
 
+import comportamentos.ComportamentoInscricao;
+import geral.Ator;
+import geral.JadeHelper;
 import geral.Time;
+import jade.core.AID;
+import java.util.HashMap;
+import java.util.Map;
+import servicos.GetProp;
 
 public class ProjetilBasico extends AgenteBase {
 
+    private Map<Ator, AID> alvos;
+
     public ProjetilBasico() {
-        tamanho = 2;
+        this.tamanho = 2;
+        this.alvos = new HashMap<>();
     }
 
     @Override
     protected void setup() {
         super.setup();
+        // Faz a leitura dos parâmetros
         this.time = (Time)getArguments()[0];
         this.angulo = (double)getArguments()[1];
         this.x = (double)getArguments()[2];
         this.y = (double)getArguments()[3];
+        // Procura todos os agentes disponíveis no DF
+        send(JadeHelper.criaMensagemInscricao(this, GetProp.nomeServico(), getClass().getSimpleName()));
+        // Recebe informações de todos os agentes de interesse (time oposto não neutro)
+        addBehaviour(new ComportamentoInscricao(this, GetProp.nomeServico(), true, agentes -> {
+            GetProp.enviarInscricao(this, agentes);
+        }));
     }
 
     // Varia o tipo da sprite de acordo com quem atirou
